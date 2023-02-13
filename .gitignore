@@ -1,0 +1,8 @@
+.vscode/
+.idea
+.class
+.classpath
+.project
+test*.sh
+**/*.iml
+target/
