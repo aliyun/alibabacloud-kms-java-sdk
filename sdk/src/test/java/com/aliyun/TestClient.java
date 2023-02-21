@@ -4,7 +4,6 @@ import com.aliyun.dkms.gcs.openapi.models.Config;
 import com.aliyun.kms.kms20160120.Client;
 import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
-import com.aliyun.kms.kms20160120.utils.Constants;
 import com.aliyun.kms20160120.models.*;
 import com.aliyun.tea.TeaException;
 import com.aliyun.utils.ConfigUtils;
@@ -29,13 +28,11 @@ public class TestClient {
     public void init() throws Exception {
         properties = ConfigUtils.loadParam("");
         Config dkmsConfig = new KmsConfig()
-//                        .setDefaultKmsApiNames(new ArrayList<String>() {{add(Constants.GET_SECRET_VALUE_API_NAME);}})
                 .setIgnoreSSLVerifySwitch(true)
                 .setProtocol(properties.getProperty("config.protocol"))
                 .setClientKeyContent(properties.getProperty("config.clientKeyContent"))
                 .setPassword(properties.getProperty("config.password"))
                 .setEndpoint(properties.getProperty("config.endpoint"));
-        dkmsConfig.setCaFilePath("PrivateKmsCA_kst-phzz61dbabacquz826y29f.pem");
         client = new Client(
                 new com.aliyun.teaopenapi.models.Config()
                 .setAccessKeyId(properties.getProperty("config.ak"))
@@ -160,7 +157,6 @@ public class TestClient {
             System.out.printf("CiphertextBlob: %s%n", response.getBody().ciphertextBlob);
             System.out.printf("Plaintext: %s%n", response.getBody().plaintext);
             DecryptResponse decryptResponse = decrypt(response.getBody().ciphertextBlob);
-//            DecryptResponse decryptResponse = decrypt(new String(base64.decode(response.getBody().ciphertextBlob.getBytes())));
             assert response.getBody().plaintext.equals(decryptResponse.getBody().plaintext);
         } catch (TeaException e) {
             e.printStackTrace();
@@ -224,8 +220,6 @@ public class TestClient {
         GetSecretValueRequest request = new GetSecretValueRequest();
         request.setSecretName(properties.getProperty("secret.name"));
         try {
-//            GetSecretValueResponse response = client.getSecretValueWithOptions(request,
-//                    new KmsRuntimeOptions().setCharset(charset).setIsUseKmsShareGateway(true));
             GetSecretValueResponse response = client.getSecretValueWithOptions(request,
                     new KmsRuntimeOptions().setCharset(charset).setIgnoreSSL(true));
             System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
@@ -242,8 +236,6 @@ public class TestClient {
         GetSecretValueRequest request = new GetSecretValueRequest();
         request.setSecretName(properties.getProperty("secret.name"));
         try {
-//            GetSecretValueResponse response = client.getSecretValueWithOptions(request,
-//                    new KmsRuntimeOptions().setCharset(charset).setIsUseKmsShareGateway(true));
             GetSecretValueResponse response = client.getSecretValueWithOptions(request,
                     new KmsRuntimeOptions().setCharset(charset).setIgnoreSSL(true)
                             .setIsUseKmsShareGateway(true)

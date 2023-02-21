@@ -66,7 +66,8 @@ public class AsymmetricDecryptSample {
      */
     private static void afterMigrateAsymmetricDecrypt() throws Exception {
         //创建kms config并设置相应参数
-        com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()                //设置KMS共享网关的域名
+        com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()
+                //设置KMS共享网关的域名
                 .setEndpoint("your-kms-endpoint")
                 //设置访问凭证AccessKeyId
                 .setAccessKeyId(System.getenv("your-ak-env-name"))
