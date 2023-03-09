@@ -7,6 +7,7 @@ import com.aliyun.dkms.gcs.sdk.models.DecryptResponse;
 import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
 import com.aliyun.kms.kms20160120.utils.Constants;
+import com.aliyun.kms.kms20160120.utils.EncryptionContextUtils;
 import com.aliyun.kms20160120.models.DecryptResponseBody;
 import com.aliyun.tea.TeaException;
 import com.aliyun.tea.TeaModel;
@@ -46,8 +47,9 @@ public class DecryptTransferHandler implements KmsTransferHandler<DecryptRequest
         }});
         decryptDKmsRequest.setIv(ivBytes);
         decryptDKmsRequest.setCiphertextBlob(ciphertextBytes);
-        if (!StringUtils.isEmpty(query.get("EncryptionContext"))) {
-            decryptDKmsRequest.setAad(query.get("EncryptionContext").getBytes(runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
+        String encryptionContext = query.get("EncryptionContext");
+        if (!StringUtils.isEmpty(encryptionContext)) {
+            decryptDKmsRequest.setAad(EncryptionContextUtils.sortAndEncode(encryptionContext, runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
         }
         return decryptDKmsRequest;
     }

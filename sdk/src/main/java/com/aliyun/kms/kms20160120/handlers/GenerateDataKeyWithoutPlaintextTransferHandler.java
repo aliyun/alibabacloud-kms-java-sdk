@@ -9,6 +9,7 @@ import com.aliyun.dkms.gcs.sdk.models.GenerateDataKeyResponse;
 import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
 import com.aliyun.kms.kms20160120.utils.ArrayUtils;
+import com.aliyun.kms.kms20160120.utils.EncryptionContextUtils;
 import com.aliyun.kms20160120.models.GenerateDataKeyWithoutPlaintextResponse;
 import com.aliyun.kms20160120.models.GenerateDataKeyWithoutPlaintextResponseBody;
 import com.aliyun.tea.TeaException;
@@ -58,8 +59,9 @@ public class GenerateDataKeyWithoutPlaintextTransferHandler implements KmsTransf
             numberOfBytes = Integer.parseInt(query.get("NumberOfBytes"));
         }
         generateDataKeyWithoutPlaintextDKmsRequest.setNumberOfBytes(numberOfBytes);
-        if (!StringUtils.isEmpty(query.get("EncryptionContext"))) {
-            generateDataKeyWithoutPlaintextDKmsRequest.setAad(query.get("EncryptionContext").getBytes(runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
+        String encryptionContext = query.get("EncryptionContext");
+        if (!StringUtils.isEmpty(encryptionContext)) {
+            generateDataKeyWithoutPlaintextDKmsRequest.setAad(EncryptionContextUtils.sortAndEncode(encryptionContext, runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
         }
         return generateDataKeyWithoutPlaintextDKmsRequest;
     }
@@ -72,6 +74,7 @@ public class GenerateDataKeyWithoutPlaintextTransferHandler implements KmsTransf
         EncryptRequest encryptRequest = new EncryptRequest();
         encryptRequest.setKeyId(generateDataKeyRequest.getKeyId());
         encryptRequest.setPlaintext(base64.encodeAsString(generateDataKeyResponse.getPlaintext()).getBytes(runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
+        encryptRequest.setAad(generateDataKeyRequest.getAad());
         EncryptResponse encryptResponse = client.encryptWithOptions(encryptRequest, dkmsRuntimeOptions);
         generateDataKeyResponse.setCiphertextBlob(encryptResponse.getCiphertextBlob());
         generateDataKeyResponse.setIv(encryptResponse.getIv());
