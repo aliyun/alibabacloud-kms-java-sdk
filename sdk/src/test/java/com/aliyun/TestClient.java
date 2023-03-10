@@ -35,11 +35,12 @@ public class TestClient {
                 .setClientKeyContent(properties.getProperty("config.clientKeyContent"))
                 .setPassword(properties.getProperty("config.password"))
                 .setEndpoint(properties.getProperty("config.endpoint"));
-        dkmsConfig.setCaFilePath("PrivateKmsCA_kst-phzz61dbabacquz826y29f.pem");
+        String accessKeyId = System.getenv("accessKeyId");
+        String accessKeySecret = System.getenv("accessKeySecret");
         client = new Client(
                 new com.aliyun.teaopenapi.models.Config()
-                .setAccessKeyId(properties.getProperty("config.ak"))
-                .setAccessKeySecret(properties.getProperty("config.sk"))
+                .setAccessKeyId(accessKeyId)
+                .setAccessKeySecret(accessKeySecret)
                 .setEndpoint(properties.getProperty("kms.endpoint"))
                 ,
                 dkmsConfig
@@ -110,11 +111,12 @@ public class TestClient {
             if (context != null) {
                 request.setEncryptionContext(new HashMap<String, String>() {{
                     put("context", context);
+                    put("context1", "123");
                 }});
             }
             DecryptResponse response = client.decryptWithOptions(request, new KmsRuntimeOptions()
                             .setCharset(charset).setIgnoreSSL(true)
-                            .setIsUseKmsShareGateway(true)
+//                            .setIsUseKmsShareGateway(true)
             );
             System.out.printf("KeyId: %s%n", response.getBody().keyId);
             System.out.printf("KeyVersionId: %s%n", response.getBody().keyVersionId);
@@ -147,20 +149,20 @@ public class TestClient {
         String context = properties.getProperty("encrypt.encryption.context");
         if (context != null) {
             request.setEncryptionContext(new HashMap<String, String>() {{
+                put("context1", "123");
                 put("context", context);
             }});
         }
         try {
             GenerateDataKeyResponse response = client.generateDataKeyWithOptions(request,
                     new KmsRuntimeOptions().setCharset(charset).setIgnoreSSL(true)
-//                            .setIsUseKmsShareGateway(true)
+                            .setIsUseKmsShareGateway(true)
             );;
             System.out.printf("KeyId: %s%n", response.getBody().keyId);
             System.out.printf("KeyVersionId: %s%n", response.getBody().keyVersionId);
             System.out.printf("CiphertextBlob: %s%n", response.getBody().ciphertextBlob);
             System.out.printf("Plaintext: %s%n", response.getBody().plaintext);
             DecryptResponse decryptResponse = decrypt(response.getBody().ciphertextBlob);
-//            DecryptResponse decryptResponse = decrypt(new String(base64.decode(response.getBody().ciphertextBlob.getBytes())));
             assert response.getBody().plaintext.equals(decryptResponse.getBody().plaintext);
         } catch (TeaException e) {
             e.printStackTrace();
@@ -177,6 +179,7 @@ public class TestClient {
         if (context != null) {
             request.setEncryptionContext(new HashMap<String, String>() {{
                 put("context", context);
+                put("context1", "123");
             }});
         }
         try {
@@ -266,13 +269,14 @@ public class TestClient {
         String context = properties.getProperty("encrypt.encryption.context");
         if (context != null) {
             request.setEncryptionContext(new HashMap<String, String>() {{
+                put("context1", "123");
                 put("context", context);
             }});
         }
         try {
             EncryptResponse response = client.encryptWithOptions(request, new KmsRuntimeOptions()
                             .setCharset(charset).setIgnoreSSL(true)
-//                            .setIsUseKmsShareGateway(true)
+                            .setIsUseKmsShareGateway(true)
             );;
             System.out.printf("KeyId: %s%n", response.getBody().keyId);
             System.out.printf("KeyVersionId: %s%n", response.getBody().keyVersionId);
@@ -315,8 +319,8 @@ public class TestClient {
         try {
             AsymmetricEncryptResponse response = client.asymmetricEncryptWithOptions(request,
                     new KmsRuntimeOptions().setCharset(charset).setIgnoreSSL(true)
-                            .setIsUseKmsShareGateway(true)
-            );;
+//                            .setIsUseKmsShareGateway(true)
+            );
             System.out.printf("CiphertextBlob: %s%n", response.getBody().ciphertextBlob);
             System.out.printf("KeyId: %s%n", response.getBody().keyId);
             System.out.printf("KeyVersionId: %s%n", response.getBody().keyVersionId);

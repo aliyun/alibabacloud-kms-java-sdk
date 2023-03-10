@@ -7,6 +7,7 @@ import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
 import com.aliyun.kms.kms20160120.utils.ArrayUtils;
 import com.aliyun.kms.kms20160120.utils.Constants;
+import com.aliyun.kms.kms20160120.utils.EncryptionContextUtils;
 import com.aliyun.kms20160120.models.EncryptResponse;
 import com.aliyun.kms20160120.models.EncryptResponseBody;
 import com.aliyun.tea.TeaException;
@@ -14,6 +15,7 @@ import com.aliyun.tea.utils.StringUtils;
 import com.aliyun.teaopenapi.models.OpenApiRequest;
 
 import java.net.HttpURLConnection;
+import java.util.Collections;
 import java.util.Map;
 
 public class EncryptTransferHandler implements KmsTransferHandler<com.aliyun.dkms.gcs.sdk.models.EncryptRequest, com.aliyun.dkms.gcs.sdk.models.EncryptResponse> {
@@ -38,8 +40,9 @@ public class EncryptTransferHandler implements KmsTransferHandler<com.aliyun.dkm
         com.aliyun.dkms.gcs.sdk.models.EncryptRequest encryptDKmsRequest = new com.aliyun.dkms.gcs.sdk.models.EncryptRequest();
         encryptDKmsRequest.setKeyId(query.get("KeyId"));
         encryptDKmsRequest.setPlaintext(query.get("Plaintext").getBytes(runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
-        if (!StringUtils.isEmpty(query.get("EncryptionContext"))) {
-            encryptDKmsRequest.setAad(query.get("EncryptionContext").getBytes(runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
+        String encryptionContext = query.get("EncryptionContext");
+        if (!StringUtils.isEmpty(encryptionContext)) {
+            encryptDKmsRequest.setAad(EncryptionContextUtils.sortAndEncode(encryptionContext, runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
         }
         return encryptDKmsRequest;
     }

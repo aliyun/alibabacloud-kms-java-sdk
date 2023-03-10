@@ -10,9 +10,11 @@ import com.aliyun.kms.kms20160120.utils.Constants;
 import com.aliyun.kms20160120.models.GetPublicKeyResponseBody;
 import com.aliyun.tea.TeaException;
 import com.aliyun.tea.TeaModel;
+import com.aliyun.tea.utils.StringUtils;
 import com.aliyun.teaopenapi.models.OpenApiRequest;
 
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GetPublicKeyTransferHandler implements KmsTransferHandler<GetPublicKeyRequest, GetPublicKeyResponse> {
@@ -29,6 +31,12 @@ public class GetPublicKeyTransferHandler implements KmsTransferHandler<GetPublic
         Map<String, String> query = request.getQuery();
         GetPublicKeyRequest getPublicKeyDKmsRequest = new GetPublicKeyRequest();
         getPublicKeyDKmsRequest.setKeyId(query.get("KeyId"));
+        final String keyVersionId = query.get("KeyVersionId");
+        if(!StringUtils.isEmpty(keyVersionId)) {
+            getPublicKeyDKmsRequest.setRequestHeaders(new HashMap<String, String>() {{
+                put(Constants.MIGRATION_KEY_VERSION_ID_KEY, keyVersionId);
+            }});
+        }
         return getPublicKeyDKmsRequest;
     }
 

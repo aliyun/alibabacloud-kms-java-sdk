@@ -14,6 +14,7 @@ import com.aliyun.tea.utils.StringUtils;
 import com.aliyun.teaopenapi.models.OpenApiRequest;
 
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AsymmetricSignTransferHandler implements KmsTransferHandler<SignRequest, SignResponse> {
@@ -39,6 +40,12 @@ public class AsymmetricSignTransferHandler implements KmsTransferHandler<SignReq
         signDKmsRequest.setAlgorithm(query.get("Algorithm"));
         signDKmsRequest.setMessage(base64.decode(query.get("Digest")));
         signDKmsRequest.setMessageType(Constants.DIGEST_MESSAGE_TYPE);
+        final String keyVersionId = query.get("KeyVersionId");
+        if(!StringUtils.isEmpty(keyVersionId)) {
+            signDKmsRequest.setRequestHeaders(new HashMap<String, String>() {{
+                put(Constants.MIGRATION_KEY_VERSION_ID_KEY, keyVersionId);
+            }});
+        }
         return signDKmsRequest;
     }
 
