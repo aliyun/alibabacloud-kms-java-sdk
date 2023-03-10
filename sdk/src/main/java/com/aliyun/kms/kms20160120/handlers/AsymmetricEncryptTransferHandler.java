@@ -14,6 +14,7 @@ import com.aliyun.tea.utils.StringUtils;
 import com.aliyun.teaopenapi.models.OpenApiRequest;
 
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AsymmetricEncryptTransferHandler implements KmsTransferHandler<EncryptRequest, EncryptResponse> {
@@ -39,6 +40,12 @@ public class AsymmetricEncryptTransferHandler implements KmsTransferHandler<Encr
         asymmetricEncryptDKmsRequest.setKeyId(query.get("KeyId"));
         asymmetricEncryptDKmsRequest.setPlaintext(base64.decode(query.get("Plaintext")));
         asymmetricEncryptDKmsRequest.setAlgorithm(query.get("Algorithm"));
+        final String keyVersionId = query.get("KeyVersionId");
+        if(!StringUtils.isEmpty(keyVersionId)) {
+            asymmetricEncryptDKmsRequest.setRequestHeaders(new HashMap<String, String>() {{
+                put(Constants.MIGRATION_KEY_VERSION_ID_KEY, keyVersionId);
+            }});
+        }
         return asymmetricEncryptDKmsRequest;
     }
 

@@ -14,6 +14,7 @@ import com.aliyun.tea.utils.StringUtils;
 import com.aliyun.teaopenapi.models.OpenApiRequest;
 
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AsymmetricVerifyTransferHandler implements KmsTransferHandler<VerifyRequest, VerifyResponse> {
@@ -43,6 +44,12 @@ public class AsymmetricVerifyTransferHandler implements KmsTransferHandler<Verif
         verifyDKmsRequest.setMessage(base64.decode(query.get("Digest")));
         verifyDKmsRequest.setMessageType(Constants.DIGEST_MESSAGE_TYPE);
         verifyDKmsRequest.setSignature(base64.decode(query.get("Value")));
+        final String keyVersionId = query.get("KeyVersionId");
+        if(!StringUtils.isEmpty(keyVersionId)) {
+            verifyDKmsRequest.setRequestHeaders(new HashMap<String, String>() {{
+                put(Constants.MIGRATION_KEY_VERSION_ID_KEY, keyVersionId);
+            }});
+        }
         return verifyDKmsRequest;
     }
 

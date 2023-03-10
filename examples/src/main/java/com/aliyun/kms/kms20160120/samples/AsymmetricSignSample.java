@@ -1,25 +1,25 @@
-package com.aliyun.kms.kms20160120;
+package com.aliyun.kms.kms20160120.samples;
 
 import com.aliyun.kms.kms20160120.Client;
 import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
-import com.aliyun.kms20160120.models.DecryptRequest;
-import com.aliyun.kms20160120.models.DecryptResponse;
+import com.aliyun.kms20160120.models.AsymmetricSignRequest;
+import com.aliyun.kms20160120.models.AsymmetricSignResponse;
 import com.aliyun.tea.TeaException;
 
 
-public class DecryptSample {
+public class AsymmetricSignSample {
 
     public static void main(String[] args) throws Exception {
-        newUserDecrypt();
-        beforeMigrateDecrypt();
-        afterMigrateDecrypt();
+        newUserAsymmetricSign();
+        beforeMigrateAsymmetricSign();
+        afterMigrateAsymmetricSign();
     }
 
     /**
      * 新接入用户可以参考此方法调用KMS实例网关的服务。
      */
-    private static void newUserDecrypt() throws Exception {
+    private static void newUserAsymmetricSign() throws Exception {
         //创建kms config并设置相应参数
         com.aliyun.dkms.gcs.openapi.models.Config config
                 = new KmsConfig()
@@ -32,13 +32,13 @@ public class DecryptSample {
                 //设置client-key密码
                 .setPassword("your-password")
                 //设置dkms域名
-                .setEndpoint("your-dkms-endpoint");
-        // 如需验证服务端证书，这里需要设置为您的服务端证书路径
-        //.setCaFilePath("path/to/yourCaCert")
+                .setEndpoint("your-dkms-endpoint")
+                // 如需验证服务端证书，这里需要设置为您的服务端证书路径
+                .setCaFilePath("path/to/yourCaCert");
         // 或者，设置为您的服务端证书内容
         //.setCa("your-ca-certificate-content"));
         Client client = new Client(config);
-        decrypt(client);
+        asymmetricSign(client);
     }
 
     /**
@@ -46,7 +46,7 @@ public class DecryptSample {
      *
      * @throws Exception
      */
-    private static void beforeMigrateDecrypt() throws Exception {
+    private static void beforeMigrateAsymmetricSign() throws Exception {
         //创建kms config并设置相应参数
         com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()
                 //设置KMS共享网关的域名
@@ -57,7 +57,7 @@ public class DecryptSample {
                 .setAccessKeySecret(System.getenv("your-sk-env-name"));
         //创建kms client
         Client client = new Client(config);
-        decrypt(client);
+        asymmetricSign(client);
     }
 
     /**
@@ -65,7 +65,7 @@ public class DecryptSample {
      *
      * @throws Exception
      */
-    private static void afterMigrateDecrypt() throws Exception {
+    private static void afterMigrateAsymmetricSign() throws Exception {
         //创建kms config并设置相应参数
         com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()                //设置KMS共享网关的域名
                 .setEndpoint("your-kms-endpoint")
@@ -85,31 +85,34 @@ public class DecryptSample {
                 //设置client-key密码
                 .setPassword("your-password")
                 //设置dkms域名
-                .setEndpoint("your-dkms-endpoint");
-        // 如需验证服务端证书，这里需要设置为您的服务端证书路径
-        //.setCaFilePath("path/to/yourCaCert")
+                .setEndpoint("your-dkms-endpoint")
+                // 如需验证服务端证书，这里需要设置为您的服务端证书路径
+                .setCaFilePath("path/to/yourCaCert");
         // 或者，设置为您的服务端证书内容
         //.setCa("your-ca-certificate-content"));
         //创建kms client
         Client client = new Client(config, kmsConfig);
-        decrypt(client);
+        asymmetricSign(client);
     }
 
     /**
-     * 对称解密
-     * @param client
+     * 非对称签名
      */
-    private static void decrypt(Client client) {
+    public static void asymmetricSign(Client client) {
+
         try {
-            DecryptRequest request = new DecryptRequest();
-            request.setCiphertextBlob("your-ciphertext-blob");
+            AsymmetricSignRequest request = new AsymmetricSignRequest();
+            request.setKeyId("your-key-id");
+            request.setAlgorithm("your-algorithm");
+            request.setDigest("your-digest");
+            request.setKeyVersionId("your-key-version-id");
             KmsRuntimeOptions runtimeOptions = new KmsRuntimeOptions();
             //如需忽略SSL证书认证,可打开如下代码并设置ignoreSSLVerifySwitch为true
             //runtimeOptions.ignoreSSL = true;
-            DecryptResponse response = client.decryptWithOptions(request, runtimeOptions);
+            AsymmetricSignResponse response = client.asymmetricSignWithOptions(request, runtimeOptions);
             System.out.printf("KeyId: %s%n", response.getBody().getKeyId());
             System.out.printf("KeyVersionId: %s%n", response.getBody().getKeyVersionId());
-            System.out.printf("Plaintext: %s%n", response.getBody().getPlaintext());
+            System.out.printf("Value: %s%n", response.getBody().getValue());
             System.out.printf("RequestId: %s%n", response.getBody().getRequestId());
         } catch (TeaException e) {
             e.printStackTrace();
@@ -117,5 +120,4 @@ public class DecryptSample {
             e.printStackTrace();
         }
     }
-
 }

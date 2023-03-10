@@ -1,4 +1,4 @@
-package com.aliyun.kms.kms20160120;
+package com.aliyun.kms.kms20160120.samples;
 
 import com.aliyun.kms.kms20160120.Client;
 import com.aliyun.kms20160120.models.CreateKeyRequest;

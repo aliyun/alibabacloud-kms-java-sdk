@@ -7,6 +7,7 @@ import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
 import com.aliyun.kms.kms20160120.utils.ArrayUtils;
 import com.aliyun.kms.kms20160120.utils.Constants;
+import com.aliyun.kms.kms20160120.utils.EncryptionContextUtils;
 import com.aliyun.kms20160120.models.GenerateDataKeyResponseBody;
 import com.aliyun.tea.TeaException;
 import com.aliyun.tea.utils.StringUtils;
@@ -54,8 +55,9 @@ public class GenerateDataKeyTransferHandler implements KmsTransferHandler<Genera
             numberOfBytes = Integer.parseInt(query.get("NumberOfBytes"));
         }
         generateDataKeyDKmsRequest.setNumberOfBytes(numberOfBytes);
-        if (!StringUtils.isEmpty(query.get("EncryptionContext"))) {
-            generateDataKeyDKmsRequest.setAad(query.get("EncryptionContext").getBytes(runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
+        String encryptionContext = query.get("EncryptionContext");
+        if (!StringUtils.isEmpty(encryptionContext)) {
+            generateDataKeyDKmsRequest.setAad(EncryptionContextUtils.sortAndEncode(encryptionContext, runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
         }
         return generateDataKeyDKmsRequest;
     }
@@ -69,6 +71,7 @@ public class GenerateDataKeyTransferHandler implements KmsTransferHandler<Genera
         EncryptRequest encryptRequest = new EncryptRequest();
         encryptRequest.setKeyId(generateDataKeyRequest.getKeyId());
         encryptRequest.setPlaintext(base64.encodeAsString(generateDataKeyResponse.getPlaintext()).getBytes(runtimeOptions.getCharset() == null ? this.kmsConfig.getCharset() : runtimeOptions.getCharset()));
+        encryptRequest.setAad(generateDataKeyRequest.getAad());
         EncryptResponse encryptResponse = client.encryptWithOptions(encryptRequest, dkmsRuntimeOptions);
         generateDataKeyResponse.setCiphertextBlob(encryptResponse.getCiphertextBlob());
         generateDataKeyResponse.setIv(encryptResponse.getIv());

@@ -1,4 +1,4 @@
-package com.aliyun.kms.kms20160120;
+package com.aliyun.kms.kms20160120.samples;
 
 import com.aliyun.kms.kms20160120.Client;
 import com.aliyun.kms.kms20160120.model.KmsConfig;
@@ -31,9 +31,9 @@ public class EncryptSample {
                 //设置client-key密码
                 .setPassword("your-password")
                 //设置dkms域名
-                .setEndpoint("your-dkms-endpoint");
-        // 如需验证服务端证书，这里需要设置为您的服务端证书路径
-        //.setCaFilePath("path/to/yourCaCert")
+                .setEndpoint("your-dkms-endpoint")
+                // 如需验证服务端证书，这里需要设置为您的服务端证书路径
+                .setCaFilePath("path/to/yourCaCert");
         // 或者，设置为您的服务端证书内容
         //.setCa("your-ca-certificate-content"));
         Client client = new Client(config);
@@ -84,9 +84,9 @@ public class EncryptSample {
                 //设置client-key密码
                 .setPassword("your-password")
                 //设置dkms域名
-                .setEndpoint("your-dkms-endpoint");
-        // 如需验证服务端证书，这里需要设置为您的服务端证书路径
-        //.setCaFilePath("path/to/yourCaCert")
+                .setEndpoint("your-dkms-endpoint")
+                // 如需验证服务端证书，这里需要设置为您的服务端证书路径
+                .setCaFilePath("path/to/yourCaCert");
         // 或者，设置为您的服务端证书内容
         //.setCa("your-ca-certificate-content"));
         //创建kms client
