@@ -9,4 +9,10 @@ public interface Constants {
     String MIGRATION_KEY_VERSION_ID_KEY = "x-kms-migrationkeyversionid";
     int NUMBER_OF_BYTES_AES_256 = 32;
     int NUMBER_OF_BYTES_AES_128 = 16;
+    byte MAGIC_NUM = '$';
+    int MAGIC_NUM_LENGTH = 1;
+    int CIPHER_VER_AND_PADDING_MODE_LENGTH = 1;
+    int ALGORITHM_LENGTH = 1;
+    byte CIPHER_VER = 0;
+    byte ALG_AES_GCM = 2;
 }

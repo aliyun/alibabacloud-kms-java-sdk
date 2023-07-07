@@ -21,6 +21,11 @@ public class KmsConfig extends com.aliyun.dkms.gcs.openapi.models.Config {
      */
     private boolean ignoreSSLVerifySwitch;
 
+    /**
+     * 高级接口开关 默认是高级接口
+     */
+    private boolean advanceSwitch = true;
+
     public KmsConfig() {
     }
 
@@ -49,6 +54,15 @@ public class KmsConfig extends com.aliyun.dkms.gcs.openapi.models.Config {
 
     public KmsConfig setIgnoreSSLVerifySwitch(boolean ignoreSSLVerifySwitch) {
         this.ignoreSSLVerifySwitch = ignoreSSLVerifySwitch;
+        return this;
+    }
+
+    public boolean getAdvanceSwitch() {
+        return advanceSwitch;
+    }
+
+    public KmsConfig setAdvanceSwitch(boolean advanceSwitch) {
+        this.advanceSwitch = advanceSwitch;
         return this;
     }
 }

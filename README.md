@@ -20,9 +20,10 @@ License
 
 Advantage
 ------ 
+Alibaba Cloud KMS SDK helps Java developers quickly use all APIs of Alibaba Cloud KMS products:
+- KMS resource management and key operations can be performed through KMS public gateway access
+- You can perform key operations through KMS instance gateway
 
-- Access KMS services through the KMS shared gateway
-- Access KMS services through the KMS instance gateway
 
 Requirements
 --------
@@ -52,31 +53,182 @@ Once you check out the code from GitHub, you can build it using Maven. Use the f
 ```
 mvn clean install -DskipTests -Dgpg.skip=true
 ```
-
-Client Mechanism
-----------------
-Alibaba Cloud KMS Java SDK supports to call APIs provided by the KMS shared gateway and KMS instance gateway.
-By default, Alibaba Cloud KMS Java SDK sends requests for the following APIs to the KMS instance gateway, and the other APIs to the KMS shared gateway.
--   Encrypt
--   Decrypt
--   GenerateDataKey
--   GenerateDataKeyWithoutPlaintext
--   GetPublicKey
--   AsymmetricEncrypt
--   AsymmetricDecrypt
--   AsymmetricSign
--   AsymmetricVerify
--   GetSecretValue
-
-
-Alibaba Cloud KMS Java SDK also supports sending API requests from the above APIs to the KMS shared gateway. For details, see Sample code - Special Usage scenarios.
-
-Sample Code
+Introduction to KMS Client
 ----------
-### Common usage scenarios
-#### Scenario 1 You can refer to the following code to call APIs of the KMS shared gateway and the KMS instance gateway in the default way.
+
+| KMS client Java classes | Introduction | Usage scenarios |
+| :-----| :---- | :---- |
+| com.aliyun.kms.kms20160120.Client | KMS resource management and key operations for KMS instance gateways are supported | 1. Scenarios where key operations are performed only through VPC gateways. <br>2. KMS resource management scenarios that only use public gateways. <br>3. Scenarios where you want to perform key operations through VPC gateways and manage KMS resources through public gateways.|
+| com.aliyun.kms.kms20160120.TransferClient | Users can migrate from KMS 1.0 key operations to KMS 3.0 key operations | Users who use Alibaba Cloud SDK to access KMS 1.0 key operations need to migrate to KMS 3.0 |
+
+Sample code
+----------
+### 1. Scenarios where key operations are performed only through VPC gateways.
+#### Refer to the following sample code to call the KMS Encrypt API. For more API examples, see [operation samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/operation)
 ```Java
-import com.aliyun.kms.kms20160120.Client;
+public class Encrypt {
+
+    public static com.aliyun.dkms.gcs.openapi.models.Config createKmsInstanceConfig(String clientKeyFile, String password, String endpoint, String caFilePath) throws Exception {
+        com.aliyun.dkms.gcs.openapi.models.Config config = new com.aliyun.dkms.gcs.openapi.models.Config();
+        config.clientKeyFile = clientKeyFile;
+        config.password = password;
+        config.endpoint = endpoint;
+        config.caFilePath = caFilePath;
+        return config;
+    }
+
+    public static com.aliyun.kms.kms20160120.Client createClient(com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig) throws Exception {
+        return new com.aliyun.kms.kms20160120.Client(kmsInstanceConfig);
+    }
+    
+    public static com.aliyun.dkms.gcs.sdk.models.EncryptResponse encrypt(com.aliyun.kms.kms20160120.Client client, String keyId, byte[] plaintext, String algorithm, byte[] aad) throws Exception {
+        com.aliyun.dkms.gcs.sdk.models.EncryptRequest request = new com.aliyun.dkms.gcs.sdk.models.EncryptRequest()
+                .setKeyId(keyId)
+                .setPlaintext(plaintext)
+                .setAad(aad)
+                .setAlgorithm(algorithm);
+        return client.encrypt(request);
+    }
+
+    public static void main(String[] args_) throws Exception {
+        com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig = Encrypt.createKmsInstanceConfig(com.aliyun.darabonba.env.EnvClient.getEnv("your client key file path env"), com.aliyun.darabonba.env.EnvClient.getEnv("your client key password env"), "your kms instance endpoint env", "your ca file path");
+        com.aliyun.kms.kms20160120.Client client = Encrypt.createClient(kmsInstanceConfig);
+
+        byte[] aad = com.aliyun.teautil.Common.toBytes("your aad");
+        String keyId = "your keyId";
+        byte[] plaintext = com.aliyun.teautil.Common.toBytes("your plaintext");
+        String algorithm = "your algorithm";
+        com.aliyun.dkms.gcs.sdk.models.EncryptResponse response = Encrypt.encrypt(client, keyId, plaintext, algorithm, aad);
+        com.aliyun.teaconsole.Client.log(com.aliyun.teautil.Common.toJSONString(response));
+    }
+}
+```
+### 2. KMS resources are managed only through public gateways.
+#### Refer to the following sample code to call the KMS CreateKey API. For more API examples, see [manage samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/manage)
+```Java
+public class CreateKey {
+
+    public static com.aliyun.teaopenapi.models.Config createOpenApiConfig(String accessKeyId, String accessKeySecret, String regionId) throws Exception {
+        com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config();
+        config.accessKeyId = accessKeyId;
+        config.accessKeySecret = accessKeySecret;
+        config.regionId = regionId;
+        return config;
+    }
+
+    public static com.aliyun.kms.kms20160120.Client createClient(com.aliyun.teaopenapi.models.Config openApiConfig) throws Exception {
+        return new com.aliyun.kms.kms20160120.Client(openApiConfig);
+    }
+
+    public static com.aliyun.kms20160120.models.CreateKeyResponse createKey(com.aliyun.kms.kms20160120.Client client, Boolean enableAutomaticRotation, String rotationInterval, String keyUsage, String origin, String description, String DKMSInstanceId, String protectionLevel, String keySpec) throws Exception {
+        com.aliyun.kms20160120.models.CreateKeyRequest request = new com.aliyun.kms20160120.models.CreateKeyRequest()
+                .setEnableAutomaticRotation(enableAutomaticRotation)
+                .setRotationInterval(rotationInterval)
+                .setKeyUsage(keyUsage)
+                .setOrigin(origin)
+                .setDescription(description)
+                .setDKMSInstanceId(DKMSInstanceId)
+                .setProtectionLevel(protectionLevel)
+                .setKeySpec(keySpec);
+        return client.createKey(request);
+    }
+
+    public static void main(String[] args_) throws Exception {
+         //Make sure that the environment in which the code runs has environment variables ALIBABA_CLOUD_ACCESS_KEY_ID and ALIBABA_CLOUD_ACCESS_KEY_SECRET set.
+         //Project code leakage may cause AccessKey to be leaked and threaten the security of all resources under the account. The following code example uses an environment variable to obtain the AccessKey for reference only, it is recommended to use the more secure STS mode, for more authentication access methods, see https://help.aliyun.com/document_detail/378657.html
+        com.aliyun.teaopenapi.models.Config openApiConfig = CreateKey.createOpenApiConfig(com.aliyun.darabonba.env.EnvClient.getEnv("ALIBABA_CLOUD_ACCESS_KEY_ID"), com.aliyun.darabonba.env.EnvClient.getEnv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"), "your regionId");
+        com.aliyun.kms.kms20160120.Client client = CreateKey.createClient(openApiConfig);    
+        Boolean enableAutomaticRotation = false;
+        String rotationInterval = "your rotationInterval";
+        String keyUsage = "your keyUsage";
+        String origin = "your origin";
+        String description = "your description";
+        String dKMSInstanceId = "your dKMSInstanceId";
+        String protectionLevel = "your protectionLevel";
+        String keySpec = "your keySpec";
+        com.aliyun.kms20160120.models.CreateKeyResponse response = CreateKey.createKey(client, enableAutomaticRotation, rotationInterval, keyUsage, origin, description, dKMSInstanceId, protectionLevel, keySpec);
+        com.aliyun.teaconsole.Client.log(com.aliyun.teautil.Common.toJSONString(response));
+    }
+}
+```
+### 3. You must not only perform key operations through a VPC gateway, but also manage KMS resources through a public gateway.
+#### Refer to the following sample code to call the KMS CreateKey API and the Encrypt API. For more API examples, see [operation samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/operation) and [manage samples](./examples/src/main/java/com/aliyun/kms/kms20160120/ samples/manage)
+```Java
+public class Sample {
+
+    public static com.aliyun.dkms.gcs.openapi.models.Config createKmsInstanceConfig(String clientKeyFile, String password, String endpoint, String caFilePath) throws Exception {
+        com.aliyun.dkms.gcs.openapi.models.Config config = new com.aliyun.dkms.gcs.openapi.models.Config();
+        config.clientKeyFile = clientKeyFile;
+        config.password = password;
+        config.endpoint = endpoint;
+        config.caFilePath = caFilePath;
+        return config;
+    }
+
+    public static com.aliyun.teaopenapi.models.Config createOpenApiConfig(String accessKeyId, String accessKeySecret, String regionId) throws Exception {
+        com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config();
+        config.accessKeyId = accessKeyId;
+        config.accessKeySecret = accessKeySecret;
+        config.regionId = regionId;
+        return config;
+    }
+
+    public static com.aliyun.kms.kms20160120.Client createClient(com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig, com.aliyun.teaopenapi.models.Config openApiConfig) throws Exception {
+        return new com.aliyun.kms.kms20160120.Client(kmsInstanceConfig, openApiConfig);
+    }
+
+    public static com.aliyun.kms20160120.models.CreateKeyResponse createKey(com.aliyun.kms.kms20160120.Client client, Boolean enableAutomaticRotation, String rotationInterval, String keyUsage, String origin, String description, String DKMSInstanceId, String protectionLevel, String keySpec) throws Exception {
+        com.aliyun.kms20160120.models.CreateKeyRequest request = new com.aliyun.kms20160120.models.CreateKeyRequest()
+                .setEnableAutomaticRotation(enableAutomaticRotation)
+                .setRotationInterval(rotationInterval)
+                .setKeyUsage(keyUsage)
+                .setOrigin(origin)
+                .setDescription(description)
+                .setDKMSInstanceId(DKMSInstanceId)
+                .setProtectionLevel(protectionLevel)
+                .setKeySpec(keySpec);
+        return client.createKey(request);
+    }
+
+    public static com.aliyun.dkms.gcs.sdk.models.EncryptResponse encrypt(com.aliyun.kms.kms20160120.Client client, String keyId, byte[] plaintext, String algorithm, byte[] aad) throws Exception {
+        com.aliyun.dkms.gcs.sdk.models.EncryptRequest request = new com.aliyun.dkms.gcs.sdk.models.EncryptRequest()
+                .setKeyId(keyId)
+                .setPlaintext(plaintext)
+                .setAad(aad)
+                .setAlgorithm(algorithm);
+        return client.encrypt(request);
+    }
+
+    public static void main(String[] args_) throws Exception {
+        com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig = Sample.createKmsInstanceConfig(com.aliyun.darabonba.env.EnvClient.getEnv("your client key file path env"), com.aliyun.darabonba.env.EnvClient.getEnv("your client key password env"), "your kms instance endpoint env", "your ca file path");
+         //Make sure that the environment in which the code runs has environment variables ALIBABA_CLOUD_ACCESS_KEY_ID and ALIBABA_CLOUD_ACCESS_KEY_SECRET set.
+         //Project code leakage may cause AccessKey to be leaked and threaten the security of all resources under the account. The following code example uses an environment variable to obtain the AccessKey for reference only, it is recommended to use the more secure STS mode, for more authentication access methods, see https://help.aliyun.com/document_detail/378657.html
+        com.aliyun.teaopenapi.models.Config openApiConfig = Sample.createOpenApiConfig(com.aliyun.darabonba.env.EnvClient.getEnv("ALIBABA_CLOUD_ACCESS_KEY_ID"), com.aliyun.darabonba.env.EnvClient.getEnv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"), "your region id");
+        com.aliyun.kms.kms20160120.Client client = Sample.createClient(kmsInstanceConfig, openApiConfig);
+        Boolean enableAutomaticRotation = false;
+        String rotationInterval = "your rotationInterval";
+        String keyUsage = "your keyUsage";
+        String origin = "your origin";
+        String description = "your description";
+        String dKMSInstanceId = "your dKMSInstanceId";
+        String protectionLevel = "your protectionLevel";
+        String keySpec = "your keySpec";
+        com.aliyun.kms20160120.models.CreateKeyResponse createKeyResponse = Sample.createKey(client, enableAutomaticRotation, rotationInterval, keyUsage, origin, description, dKMSInstanceId, protectionLevel, keySpec);
+        com.aliyun.teaconsole.Client.log(com.aliyun.teautil.Common.toJSONString(createKeyResponse));
+
+        byte[] aad = com.aliyun.teautil.Common.toBytes("your aad");
+        String keyId = "your keyId";
+        byte[] plaintext = com.aliyun.teautil.Common.toBytes("your plaintext");
+        String algorithm = "your algorithm";
+        com.aliyun.dkms.gcs.sdk.models.EncryptResponse encryptResponse = Sample.encrypt(client, keyId, plaintext, algorithm, aad);
+        com.aliyun.teaconsole.Client.log(com.aliyun.teautil.Common.toJSONString(encryptResponse));
+    }
+}
+```
+### Users who use Alibaba Cloud SDK to access KMS 1.0 key operations need to migrate to KMS 3.0.
+#### Refer to the following sample code to call the KMS API. For more API examples, see [kms transfer samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/transfer)
+```Java
+import com.aliyun.kms20160120.Client;
 import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms20160120.models.*;
 import com.aliyun.tea.TeaException;
@@ -84,38 +236,38 @@ import com.aliyun.teaopenapi.models.Config;
 
 public class Sample {
     public static void main(String[] args) throws Exception {
-        Client client = initClient();
+        Client client = createClient();
         createKey(client);
         generateDataKey(client);
     }
 
-    private static Client initClient() {
+    private static Client createClient() {
         try {
-            //set kms config
-            Config config = new Config()
-                    //set the KMS shared gateway endpoint
-                    .setEndpoint("your-kms-endpoint")
-                    //set accessKeyId
-                    .setAccessKeyId(System.getenv("your-ak-env-name"))
-                    //set accessKeySecret
-                    .setAccessKeySecret(System.getenv("your-sk-env-name"));
-            //set kms instance config
-            com.aliyun.dkms.gcs.openapi.models.Config kmsConfig
-                    = new KmsConfig()
-                    //set the request protocol to HTTPS
-                    .setProtocol("https")
-                    //set client key file path
-                    .setClientKeyFile("your-client-key-file")
-                    //set client key password
-                    .setPassword("your-password")
-                    //set instance endpoint
-                    .setEndpoint("your-dkms-endpoint")
-                    //set your KMS instance's CA certificate with the file path
-                        .setCaFilePath("path/to/yourCaCert");
-                // or, with content of CA certificate
+        //set kms config
+        Config config = new Config()
+                //set the KMS shared gateway endpoint
+                .setEndpoint("your-kms-endpoint")
+                //set accessKeyId
+                .setAccessKeyId(System.getenv("your-ak-env-name"))
+                //set accessKeySecret
+                .setAccessKeySecret(System.getenv("your-sk-env-name"));
+        //set kms instance config
+        com.aliyun.dkms.gcs.openapi.models.Config kmsConfig
+                = new KmsConfig()
+                //set the request protocol to HTTPS
+                .setProtocol("https")
+                //set client key file path
+                .setClientKeyFile("your-client-key-file")
+                //set client key password
+                .setPassword("your-password")
+                //set instance endpoint
+                .setEndpoint("your-dkms-endpoint")
+                //set your KMS instance's CA certificate with the file path
+                .setCaFilePath("path/to/yourCaCert");
+            // or, with content of CA certificate
             //.setCa("your-ca-certificate-content");
             //create kms client
-            return new com.aliyun.kms.kms20160120.Client(config, kmsConfig);
+            return new com.aliyun.kms.kms20160120.TransferClient(config, kmsConfig);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -159,482 +311,6 @@ public class Sample {
             System.out.printf("RequestId: %s%n", response.getBody().getRequestId());
         } catch (TeaException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-#### Scenario 2 You can refer to the following code to call only the APIs of the KMS instance gateway.
-```Java
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms.kms20160120.model.KmsConfig;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-
-public class GetSecretValueSample {
-    public static void main(String[] args) throws Exception {
-        getSecretValue();
-    }
-
-    public static void getSecretValue() {
-            try {
-                //set kms instance config
-                com.aliyun.dkms.gcs.openapi.models.Config config
-                        = new KmsConfig()
-                        //set the request protocol to HTTPS
-                        .setProtocol("https")
-                        //set client key file path
-                        .setClientKeyFile("your-client-key-file")
-                        //set client key password
-                        .setPassword("your-password")
-                        //set instance endpoint
-                        .setEndpoint("your-dkms-endpoint")
-                        //set your KMS instance's CA certificate with the file path
-                        .setCaFilePath("path/to/yourCaCert");
-                // or, with content of CA certificate
-                //.setCa("your-ca-certificate-content");
-                //create kms client
-                Client client = new com.aliyun.kms.kms20160120.Client(config);
-                //create a GetSecretValue request body
-                GetSecretValueRequest request = new GetSecretValueRequest();
-                //set the SecretName parameter
-                request.setSecretName("your-secret-name");
-                GetSecretValueResponse response = client.getSecretValue(request);
-                System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-                System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-                System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-            } catch (TeaException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-    }
-}
-```
-#### Scenario 3 You can refer to the following code to call only the KMS shared gateway API.
-```Java
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teaopenapi.models.Config;
-import com.aliyun.teautil.models.RuntimeOptions;
-   
-   
-public class GetSecretValueSample {
-   public static void main(String[] args) throws Exception {
-       getSecretValue();
-   }
-
-   public static void getSecretValue() {
-
-       try {
-            //set kms config
-           Config config = new Config()
-                   //set the KMS shared gateway endpoint
-                   .setEndpoint("your-kms-endpoint")
-                   //set accessKeyId
-                   .setAccessKeyId(System.getenv("your-ak-env-name"))
-                   //set accessKeySecret
-                   .setAccessKeySecret(System.getenv("your-sk-env-name"));
-           //create kms client
-           Client client = new com.aliyun.kms.kms20160120.Client(config);
-           //create a GetSecretValue request body
-           GetSecretValueRequest request = new GetSecretValueRequest();
-           //set the SecretName parameter
-           request.setSecretName("your-secret-name");
-           GetSecretValueResponse response = client.getSecretValue(request);
-           System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-           System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-           System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-       } catch (TeaException e) {
-           e.printStackTrace();
-           throw new RuntimeException(e);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-   }
-}
-```
-### Special usage scenarios
-#### Scenario 1 Refer to the following code to forward calls from all of these API to the KMS shared gateway.
-```Java
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teaopenapi.models.Config;
-
-
-public class GetSecretValueSample {
-    public static void main(String[] args) throws Exception {
-        getSecretValue();
-    }
-
-    public static void getSecretValue() {
-
-        try {
-            //set config
-            Config config = new Config()
-                    //set the KMS shared gateway endpoint
-                    .setEndpoint("your-kms-endpoint")
-                    //set accessKeyId
-                    .setAccessKeyId(System.getenv("your-ak-env-name"))
-                    //set accessKeySecret
-                    .setAccessKeySecret(System.getenv("your-sk-env-name"));
-
-            //create a KMS client and forward all interfaces to the KMS shared gateway
-            Client client = new com.aliyun.kms.kms20160120.Client(config);
-            //create a GetSecretValue request body
-            GetSecretValueRequest request = new GetSecretValueRequest();
-            //set the SecretName parameter
-            request.setSecretName("your-secret-name");
-
-            GetSecretValueResponse response = client.getSecretValue(request);
-            System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-            System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-            System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-        } catch (TeaException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-#### Scenario 2 Refer to the following code to forward the call to a specific API (GetSecretValue) to the KMS shared gateway.
-```Java
-import com.aliyun.kms.kms20160120.model.KmsConfig;
-import com.aliyun.kms.kms20160120.utils.ApiNames;
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teaopenapi.models.Config;
-
-
-public class GetSecretValueSample {
-    public static void main(String[] args) throws Exception {
-        getSecretValue();
-    }
-
-    public static void getSecretValue() {
-
-        try {
-            //set kms config
-            Config config = new Config()
-                    //set the KMS shared gateway endpoint
-                    .setEndpoint("your-kms-endpoint")
-                    //set accessKeyId
-                    .setAccessKeyId(System.getenv("your-ak-env-name"))
-                    //set accessKeySecret
-                    .setAccessKeySecret(System.getenv("your-sk-env-name"));
-            //set kms instance config
-            com.aliyun.dkms.gcs.openapi.models.Config kmsConfig
-                    = new KmsConfig()
-                    // send the request with the related API name  to the kms share gateway
-                    .setDefaultKmsApiNames(ApiNames.GET_SECRET_VALUE_API_NAME)
-                    //set the request protocol to HTTPS
-                    .setProtocol("https")
-                    //set client key file path
-                    .setClientKeyFile("your-client-key-file")
-                    //set client key password
-                    .setPassword("your-password")
-                    //set instance endpoint
-                    .setEndpoint("your-dkms-endpoint")
-                    //set your KMS instance's CA certificate with the file path
-                    .setCaFilePath("path/to/yourCaCert");
-                // or, with content of CA certificate
-            //.setCa("your-ca-certificate-content");
-
-            //create kms client
-            Client client = new com.aliyun.kms.kms20160120.Client(config, kmsConfig);
-            //create a GetSecretValue request body
-            GetSecretValueRequest request = new GetSecretValueRequest();
-            //set the SecretName parameter
-            request.setSecretName("your-secret-name");
-
-            GetSecretValueResponse response = client.getSecretValue(request);
-            System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-            System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-            System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-        } catch (TeaException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-#### Scenario 3 Refer to the following code to forward a single call to the KMS shared gateway.
-```Java
-import com.aliyun.kms.kms20160120.model.KmsConfig;
-import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teaopenapi.models.Config;
-
-
-public class GetSecretValueSample {
-    public static void main(String[] args) throws Exception {
-        getSecretValue();
-    }
-
-    public static void getSecretValue() {
-
-        try {
-            //set kms config
-            Config config = new Config()
-                    //set the KMS shared gateway endpoint
-                    .setEndpoint("your-kms-endpoint")
-                    //set accessKeyId
-                    .setAccessKeyId(System.getenv("your-ak-env-name"))
-                    //set accessKeySecret
-                    .setAccessKeySecret(System.getenv("your-sk-env-name"));
-            //set kms instance config
-            com.aliyun.dkms.gcs.openapi.models.Config kmsConfig
-                    = new KmsConfig()
-                    //set the request protocol to HTTPS
-                    .setProtocol("https")
-                    //set client key file path
-                    .setClientKeyFile("your-client-key-file")
-                    //set password
-                    .setPassword("your-password")
-                    //set instance endpoint
-                    .setEndpoint("your-dkms-endpoint")
-                    //set your KMS instance's CA certificate with the file path
-                    .setCaFilePath("path/to/yourCaCert");
-                // or, with content of CA certificate
-            //.setCa("your-ca-certificate-content");
-            //create a KMS client and forward all interfaces to the KMS shared gateway
-            Client client = new com.aliyun.kms.kms20160120.Client(config, kmsConfig);
-            //create a GetSecretValue request body
-            GetSecretValueRequest request = new GetSecretValueRequest();
-            //set the SecretName parameter
-            request.setSecretName("your-secret-name");
-            //create KMS runtime configuration parameters
-            KmsRuntimeOptions runtimeOptions = new KmsRuntimeOptions();
-            //configure this request interface to forward to the KMS shared gateway
-            runtimeOptions.setIsUseKmsShareGateway(true);
-            GetSecretValueResponse response = client.getSecretValueWithOptions(request, runtimeOptions);
-            System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-            System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-            System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-        } catch (TeaException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-Character encoding setting instructions (default UTF-8)
-----------
-- You can refer to the following code example to set the global character set encoding.
-```Java
-import com.aliyun.kms.kms20160120.model.KmsConfig;
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teaopenapi.models.Config;
-
-import java.nio.charset.StandardCharsets;
-
-
-public class Sample {
-    public static void main(String[] args) throws Exception {
-        getSecretValue();
-    }
-
-    public static void getSecretValue() {
-
-        try {
-            //set kms config
-            Config config = new Config()
-                    //set the KMS shared gateway endpoint
-                    .setEndpoint("your-kms-endpoint")
-                    //set accessKeyId
-                    .setAccessKeyId(System.getenv("your-ak-env-name"))
-                    //set accessKeySecret
-                    .setAccessKeySecret(System.getenv("your-sk-env-name"));
-            //set kms instance config
-            com.aliyun.dkms.gcs.openapi.models.Config kmsConfig
-                    = new KmsConfig()
-                    //set charset to UTF-8
-                    .setCharset(StandardCharsets.UTF_8)
-                    //set the request protocol to HTTPS
-                    .setProtocol("https")
-                    //set client key file path
-                    .setClientKeyFile("your-client-key-file")
-                    //set client key password
-                    .setPassword("your-password")
-                    //set instance endpoint
-                    .setEndpoint("your-dkms-endpoint")
-                    //set your KMS instance's CA certificate with the file path
-                    .setCaFilePath("path/to/yourCaCert");
-             // or, with content of CA certificate
-            //.setCa("your-ca-certificate-content");
-            //create a KMS client and forward all interfaces to the KMS shared gateway
-            Client client = new com.aliyun.kms.kms20160120.Client(config, kmsConfig);
-            //create a GetSecretValue request body
-            GetSecretValueRequest request = new GetSecretValueRequest();
-            //set the SecretName parameter
-            request.setSecretName("your-secret-name");
-            GetSecretValueResponse response = client.getSecretValue(request);
-            System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-            System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-            System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-        } catch (TeaException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-- You can refer to the following code example to set the character set encoding for a single request.
-```Java
-import com.aliyun.kms.kms20160120.model.KmsConfig;
-import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teaopenapi.models.Config;
-
-import java.nio.charset.StandardCharsets;
-
-
-public class Sample {
-    public static void main(String[] args) throws Exception {
-        getSecretValue();
-    }
-
-    public static void getSecretValue() {
-
-        try {
-            //set kms config
-            Config config = new Config()
-                    //set the KMS shared gateway endpoint
-                    .setEndpoint("your-kms-endpoint")
-                    //set accessKeyId
-                    .setAccessKeyId(System.getenv("your-ak-env-name"))
-                    //set accessKeySecret
-                    .setAccessKeySecret(System.getenv("your-sk-env-name"));
-            //set kms instance config
-            com.aliyun.dkms.gcs.openapi.models.Config kmsConfig
-                    = new KmsConfig()
-                    //set the request protocol to HTTPS
-                    .setProtocol("https")
-                    //set client key file path
-                    .setClientKeyFile("your-client-key-file")
-                    //set client key password
-                    .setPassword("your-password")
-                    //set instance endpoint
-                    .setEndpoint("your-dkms-endpoint")
-                    //set your KMS instance's CA certificate with the file path
-                    .setCaFilePath("path/to/yourCaCert");
-             // or, with content of CA certificate
-            //.setCa("your-ca-certificate-content");
-            //create a KMS client and forward all interfaces to the KMS shared gateway
-            Client client = new com.aliyun.kms.kms20160120.Client(config, kmsConfig);
-            //create a GetSecretValue request body
-            GetSecretValueRequest request = new GetSecretValueRequest();
-            //set the SecretName parameter
-            request.setSecretName("your-secret-name");
-            //create KMS runtime configuration parameters
-            KmsRuntimeOptions runtimeOptions = new KmsRuntimeOptions();
-            //set charset to UTF-8
-            runtimeOptions.setCharset(StandardCharsets.UTF_8);
-            GetSecretValueResponse response = client.getSecretValueWithOptions(request, runtimeOptions);
-            System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-            System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-            System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-        } catch (TeaException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-
-SSL certificate validation switch setting (default validation of SSL certificate)
-----------
-You can refer to the following code example to set the HTTPS SSL certificate not to be validated, for example when developing tests, to simplify the program.
-
-```Java
-import com.aliyun.kms.kms20160120.model.KmsConfig;
-import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
-import com.aliyun.kms20160120.Client;
-import com.aliyun.kms20160120.models.GetSecretValueRequest;
-import com.aliyun.kms20160120.models.GetSecretValueResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teaopenapi.models.Config;
-import com.aliyun.teautil.models.RuntimeOptions;
-
-
-public class GetSecretValueSample {
-    public static void main(String[] args) throws Exception {
-        getSecretValue();
-    }
-
-    public static void getSecretValue() {
-
-        try {
-            //set config
-            Config config = new Config()
-                    //set the KMS shared gateway endpoint
-                    .setEndpoint("your-kms-endpoint")
-                    //set accessKeyId
-                    .setAccessKeyId(System.getenv("your-ak-env-name"))
-                    //set accessKeySecret
-                    .setAccessKeySecret(System.getenv("your-sk-env-name"));
-            //set kms instance config
-            com.aliyun.dkms.gcs.openapi.models.Config kmsConfig
-                    = new KmsConfig()
-                    //set the SSL authentication identity, which is false by default, the SSL certificate needs to be verified. When set setIgnoreSSLVerifySwitch with true, you can set whether to ignore SSL certificates when calling the interface
-                    .setIgnoreSSLVerifySwitch(true)
-                    //set the request protocol to HTTPS
-                    .setProtocol("https")
-                    //set client key file path
-                    .setClientKeyFile("your-client-key-file")
-                    //set client key password
-                    .setPassword("your-password")
-                    //set instance endpoint
-                    .setEndpoint("your-dkms-endpoint");
-            			// you do not need to set your KMS instance's CA certificate when ingoring the SSL certificate validation
-                  //.setCaFilePath("path/to/yourCaCert");
-             // or, with content of CA certificate
-            //.setCa("your-ca-certificate-content");
-            //create a KMS client and forward all interfaces to the KMS shared gateway
-            Client client = new com.aliyun.kms.kms20160120.Client(config, kmsConfig,true);
-            //create a GetSecretValue request body
-            GetSecretValueRequest request = new GetSecretValueRequest();
-            //set the SecretName parameter
-            request.setSecretName("your-secret-name");
-            //create KMS runtime configuration parameters
-            RuntimeOptions runtimeOptions = new KmsRuntimeOptions();
-            //SSL certificate authentication is ignored if ignoreSSLVerifySwitch is true
-            runtimeOptions.ignoreSSL = true;
-            GetSecretValueResponse response = client.getSecretValueWithOptions(request, runtimeOptions);
-            System.out.printf("SecretData: %s%n", response.getBody().getSecretData());
-            System.out.printf("ExtendedConfig: %s%n", response.getBody().getExtendedConfig());
-            System.out.printf("CreateTime: %s%n", response.getBody().getCreateTime());
-        } catch (TeaException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         } catch (Exception e) {
             e.printStackTrace();
         }
