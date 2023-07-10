@@ -55,7 +55,7 @@ public class KmsRuntimeOptions extends com.aliyun.teautil.models.RuntimeOptions 
         return this;
     }
 
-    public boolean getIgnoreSSL() {
+    public Boolean getIgnoreSSL() {
         return ignoreSSL;
     }
 
