@@ -84,6 +84,13 @@ Example: The data size is 32 bytes, the number of threads is 32, the pressure te
 ```shell
 java -jar kms-java-sdk-benchmarks-jar-with-dependencies.jar -case=get_secret_value -client_key_path=./ClientKey_****.json -client_key_password=**** -endpoint=kst-****.cryptoservice.kms.aliyuncs.com -secret_name=**** -data_size=32 -concurrence_nums=32 -duration=600
 ```
+- generate_datakey_pair：test GenerateDataKeyPair api performance.
+
+Example: The data size is 32 bytes, the number of threads is 32, the pressure test time is 600 seconds, and the output is output to the console.
+
+```shell
+java -jar kms-java-sdk-benchmarks-jar-with-dependencies.jar -case=generate_datakey_pair -client_key_path=./ClientKey_****.json -client_key_password=**** -endpoint=kst-****.cryptoservice.kms.aliyuncs.com -key_id=**** -key_format=**** -key_pair_spec=**** -algorithm=**** -data_size=32 -concurrence_nums=32 -duration=600
+```
 
 ## Reference configuration parameters for different performances of KMS instances
 

@@ -24,8 +24,11 @@ public class Benchmark {
             int dataSize = Integer.parseInt(argsList.getOrDefault("data_size", "32"));
             String secretName = argsList.getOrDefault("secret_name", "");
             String caPath = argsList.getOrDefault("ca_path", "");
+            String algorithm = argsList.getOrDefault("algorithm", "");
+            String keyFormat = argsList.getOrDefault("key_format", "");
+            String keyPairSpec = argsList.getOrDefault("key_pair_spec", "");
 
-            Config config = new Config(caseName, endpoint, keyId, clientKeyPath, clientKeyPassword, dataSize, concurrenceNums, duration, period, logPath, enableDebugLog, caPath, secretName);
+            Config config = new Config(caseName, endpoint, keyId, clientKeyPath, clientKeyPassword, dataSize, concurrenceNums, duration, period, logPath, enableDebugLog, caPath, secretName, algorithm, keyFormat, keyPairSpec);
             config.applyFlag();
 
             Logger reportLog = null;

@@ -26,12 +26,16 @@ public class Config {
     private byte[] aad;
     private byte[] digest;
     private String ca;
+    private String keyFormat;
+    private String keyPairSpec;
 
     public Config() {
     }
 
+
     public Config(String caseName, String endpoint, String keyId, String clientKeyPath, String clientKeyPassword, int dataSize,
-                  int concurrenceNums, int duration, int period, String logPath, boolean enableDebugLog, String caFilePath, String secretName) {
+                  int concurrenceNums, int duration, int period, String logPath, boolean enableDebugLog, String caFilePath,
+                  String secretName, String algorithm, String keyFormat, String keyPairSpec) {
         this.caseName = caseName;
         this.endpoint = endpoint;
         this.keyId = keyId;
@@ -45,6 +49,9 @@ public class Config {
         this.enableDebugLog = enableDebugLog;
         this.caFilePath = caFilePath;
         this.secretName = secretName;
+        this.algorithm = algorithm;
+        this.keyFormat = keyFormat;
+        this.keyPairSpec = keyPairSpec;
     }
 
     public String getCaseName() {
@@ -207,6 +214,22 @@ public class Config {
     public Config setCa(String ca) {
         this.ca = ca;
         return this;
+    }
+
+    public String getKeyFormat() {
+        return keyFormat;
+    }
+
+    public void setKeyFormat(String keyFormat) {
+        this.keyFormat = keyFormat;
+    }
+
+    public String getKeyPairSpec() {
+        return keyPairSpec;
+    }
+
+    public void setKeyPairSpec(String keyPairSpec) {
+        this.keyPairSpec = keyPairSpec;
     }
 
     public void applyFlag() throws IllegalArgumentException, NoSuchAlgorithmException, IOException {
