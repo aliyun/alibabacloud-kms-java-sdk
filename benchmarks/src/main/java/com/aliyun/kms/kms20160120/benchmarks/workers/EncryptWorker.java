@@ -32,6 +32,7 @@ public class EncryptWorker implements Worker {
         if(this.client._ca == null || this.client._ca.isEmpty()){
             runtimeOptions.setIgnoreSSL(true);
         }
+        runtimeOptions.setAutoretry(false);
         return client.encryptWithOptions(request, runtimeOptions);
     }
 }

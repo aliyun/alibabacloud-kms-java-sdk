@@ -82,6 +82,13 @@ java -jar kms-java-sdk-benchmarks-jar-with-dependencies.jar -case=verify -client
 ```shell
 java -jar kms-java-sdk-benchmarks-jar-with-dependencies.jar -case=get_secret_value -client_key_path=./ClientKey_****.json -client_key_password=**** -endpoint=kst-****.cryptoservice.kms.aliyuncs.com -secret_name=**** -data_size=32 -concurrence_nums=32 -duration=600
 ```
+- generate_datakey_pair：测试生成密钥对接口性能。
+
+示例：数据大小32字节，线程数32，压测时间600秒，输出到控制台。
+
+```shell
+java -jar kms-java-sdk-benchmarks-jar-with-dependencies.jar -case=generate_datakey_pair -client_key_path=./ClientKey_****.json -client_key_password=**** -endpoint=kst-****.cryptoservice.kms.aliyuncs.com -key_id=**** -key_format=**** -key_pair_spec=**** -algorithm=**** -data_size=32 -concurrence_nums=32 -duration=600
+```
 
 ## KMS实例不同性能的参考配置参数
 

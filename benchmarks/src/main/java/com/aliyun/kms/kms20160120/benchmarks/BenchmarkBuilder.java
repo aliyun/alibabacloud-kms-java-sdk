@@ -60,6 +60,9 @@ public class BenchmarkBuilder {
             case "get_secret_value":
                 this.worker = new GetSecretValueWorker(client, this.config.getSecretName());
                 break;
+            case "generate_datakey_pair":
+                this.worker = new GenerateDataKeyPairKeyWorker(client, this.config.getKeyId(), this.config.getKeyFormat(), this.config.getKeyPairSpec(), this.config.getAlgorithm(), this.config.getAad());
+                break;
             default:
                 throw new Exception(String.format("invalid benchmark case name:%s", this.config.getCaseName()));
         }
@@ -99,7 +102,7 @@ public class BenchmarkBuilder {
                 countCollect.analysisLastTime.set(System.currentTimeMillis());
                 countCollect.Analysis(reportLogger, period);
             }
-        }, 1000L, this.config.getPeriod()*1000L);
+        }, 1000L, this.config.getPeriod() * 1000L);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             reportLogger.info(String.format("----------------- Statistics: [%s]--------------", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
@@ -159,6 +162,9 @@ public class BenchmarkBuilder {
                     requestId = worker.doAction();
                 } catch (Exception e) {
                     err = e;
+                    if (debugLogger != null) {
+                        debugLogger.error("[BenchError_%d]\tException: %s",e);
+                    }
                 } finally {
                     long onceTimeCost = System.currentTimeMillis() - onceTimeStart;
                     // 更新统计数据
@@ -237,10 +243,10 @@ public class BenchmarkBuilder {
                     maxDuration = duration.get();
                 }
             }
-            if(period == 0){
+            if (period == 0) {
                 period = 1L;
             }
-            if(allThreadCount == 0){
+            if (allThreadCount == 0) {
                 allThreadCount = 1L;
             }
             String record = String.format(
@@ -249,8 +255,8 @@ public class BenchmarkBuilder {
                             "ClientErrorCount: %d\tLimitExceededErrorCount: %d\tTimeoutErrorCount: %d",
                     allRequestCount,
                     allResponseCount,
-                    (long)(allPeriodTps / ((double)period/1000)),
-                    (long)(allThreadCount / ((double)this.runBenchTimeCost.get()/1000)),
+                    (long) (allPeriodTps / ((double) period / 1000)),
+                    (long) (allThreadCount / ((double) this.runBenchTimeCost.get() / 1000)),
                     maxDuration, minDuration, allThreadTimeCost / allThreadCount, clientErrorCount.get(),
                     responseLimitCount.get(), timeoutErrorCount.get());
 
