@@ -51,7 +51,7 @@ public class TransferClient extends com.aliyun.kms20160120.Client {
         handlerMap.put(ApiNames.ASYMMETRIC_VERIFY_API_NAME, new AsymmetricVerifyTransferHandler(client, this.kmsConfig, ApiNames.ASYMMETRIC_VERIFY_API_NAME));
         handlerMap.put(ApiNames.GET_PUBLIC_KEY_API_NAME, new GetPublicKeyTransferHandler(client, this.kmsConfig, ApiNames.GET_PUBLIC_KEY_API_NAME));
         handlerMap.put(ApiNames.GET_SECRET_VALUE_API_NAME, new GetSecretValueTransferHandler(client, this.kmsConfig, ApiNames.GET_SECRET_VALUE_API_NAME));
-        if (kmsConfig.getAdvanceSwitch()) {
+        if (kmsConfig != null && kmsConfig.getForceLowVersionCryptoTransfer()) {
             handlerMap.put(ApiNames.ENCRYPT_API_NAME, new EncryptTransferHandler(client, this.kmsConfig, ApiNames.ENCRYPT_API_NAME));
             handlerMap.put(ApiNames.DECRYPT_API_NAME, new DecryptTransferHandler(client, this.kmsConfig, ApiNames.DECRYPT_API_NAME));
             handlerMap.put(ApiNames.GENERATE_DATA_KEY_API_NAME, new GenerateDataKeyTransferHandler(client, this.kmsConfig, ApiNames.GENERATE_DATA_KEY_API_NAME));

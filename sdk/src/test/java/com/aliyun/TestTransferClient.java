@@ -33,7 +33,7 @@ public class TestTransferClient {
         properties = ConfigUtils.loadParam("");
         Config dkmsConfig = new KmsConfig()
 //                        .setDefaultKmsApiNames(new ArrayList<String>() {{add(Constants.GET_SECRET_VALUE_API_NAME);}})
-                .setIgnoreSSLVerifySwitch(true).setAdvanceSwitch(false)
+                .setIgnoreSSLVerifySwitch(true)
                 .setProtocol(properties.getProperty("config.protocol"))
                 .setClientKeyContent(properties.getProperty("config.clientKeyContent"))
                 .setPassword(properties.getProperty("config.password"))
@@ -118,7 +118,7 @@ public class TestTransferClient {
             }
             DecryptResponse response = client.decryptWithOptions(request, new KmsRuntimeOptions()
                             .setCharset(charset).setIgnoreSSL(true)
-                            .setIsUseKmsShareGateway(true)
+//                            .setIsUseKmsShareGateway(true)
             );
             System.out.printf("KeyId: %s%n", response.getBody().keyId);
             System.out.printf("KeyVersionId: %s%n", response.getBody().keyVersionId);
