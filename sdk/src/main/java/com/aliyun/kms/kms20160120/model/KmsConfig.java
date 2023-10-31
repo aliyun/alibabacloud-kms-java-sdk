@@ -20,11 +20,12 @@ public class KmsConfig extends com.aliyun.dkms.gcs.openapi.models.Config {
      * ssl验证开关,默认为false,即需验证ssl证书;为true时,表示可在调用接口时设置是否忽略ssl证书
      */
     private boolean ignoreSSLVerifySwitch;
-
-    /**
-     * 高级接口开关 默认是高级接口
-     */
+    @Deprecated
     private boolean advanceSwitch = true;
+    /**
+     * 强制使用低级转换接口 默认是false,即使用高级转换接口
+     */
+    private boolean forceLowVersionCryptoTransfer;
 
     public KmsConfig() {
     }
@@ -57,12 +58,24 @@ public class KmsConfig extends com.aliyun.dkms.gcs.openapi.models.Config {
         return this;
     }
 
+    @Deprecated
     public boolean getAdvanceSwitch() {
         return advanceSwitch;
     }
 
+    @Deprecated
     public KmsConfig setAdvanceSwitch(boolean advanceSwitch) {
         this.advanceSwitch = advanceSwitch;
         return this;
     }
+
+    public boolean getForceLowVersionCryptoTransfer() {
+        return forceLowVersionCryptoTransfer;
+    }
+
+    public KmsConfig setForceLowVersionCryptoTransfer(boolean forceLowVersionCryptoTransfer) {
+        this.forceLowVersionCryptoTransfer = forceLowVersionCryptoTransfer;
+        return this;
+    }
+
 }
