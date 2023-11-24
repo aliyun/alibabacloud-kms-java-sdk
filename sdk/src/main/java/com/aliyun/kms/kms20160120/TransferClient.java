@@ -4,6 +4,7 @@ import com.aliyun.kms.kms20160120.handlers.*;
 import com.aliyun.kms.kms20160120.model.KmsConfig;
 import com.aliyun.kms.kms20160120.model.KmsRuntimeOptions;
 import com.aliyun.kms.kms20160120.utils.ApiNames;
+import com.aliyun.kms.kms20160120.utils.Constants;
 import com.aliyun.kms20160120.models.*;
 import com.aliyun.teaopenapi.models.OpenApiRequest;
 import com.aliyun.teaopenapi.models.Params;
@@ -41,6 +42,7 @@ public class TransferClient extends com.aliyun.kms20160120.Client {
         }
         this.isUseKmsShareGateway = isUseKmsShareGateway;
         client = new com.aliyun.dkms.gcs.sdk.Client(kmsConfig);
+        client._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(Constants.TRANSFER_CLIENT_USER_AGENT);
         initKmsTransferHandler();
     }
 

@@ -15,4 +15,8 @@ public interface Constants {
     int ALGORITHM_LENGTH = 1;
     byte CIPHER_VER = 0;
     byte ALG_AES_GCM = 2;
+    String SDK_NAME = "alibabacloud-kms-java-sdk";
+    String SDK_VERSION = "1.2.3";
+    String CLIENT_USER_AGENT = SDK_NAME + "-client/" + SDK_VERSION;
+    String TRANSFER_CLIENT_USER_AGENT = SDK_NAME + "-transfer-client/" + SDK_VERSION;
 }

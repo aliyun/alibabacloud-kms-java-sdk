@@ -1,6 +1,7 @@
 // This file is auto-generated, don't edit it. Thanks.
 package com.aliyun.kms.kms20160120;
 
+import com.aliyun.kms.kms20160120.utils.Constants;
 import com.aliyun.tea.TeaConverter;
 import com.aliyun.tea.TeaModel;
 import com.aliyun.tea.TeaPair;
@@ -10,13 +11,15 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
     public com.aliyun.kms20160120.Client _kmsClient;
     public Client(com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig, com.aliyun.teaopenapi.models.Config openApiConfig) throws Exception {
         super(kmsInstanceConfig);
+        this._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(Constants.CLIENT_USER_AGENT);
         this._kmsClient = new com.aliyun.kms20160120.Client(openApiConfig);
     }
 
     public Client(com.aliyun.dkms.gcs.openapi.models.Config config) throws Exception {
         super(config);
+        this._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(Constants.CLIENT_USER_AGENT);
     }
-    
+
     public Client(com.aliyun.teaopenapi.models.Config openApiConfig) throws Exception {
         super(new com.aliyun.dkms.gcs.openapi.models.Config().setEndpoint("mock endpoint"));
         this._kmsClient = new com.aliyun.kms20160120.Client(openApiConfig);
