@@ -42,7 +42,11 @@ public class TransferClient extends com.aliyun.kms20160120.Client {
         }
         this.isUseKmsShareGateway = isUseKmsShareGateway;
         client = new com.aliyun.dkms.gcs.sdk.Client(kmsConfig);
-        client._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(Constants.TRANSFER_CLIENT_USER_AGENT);
+        if (kmsConfig.getUserAgent() == null || "".equals(kmsConfig.getUserAgent())) {
+            client._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(Constants.TRANSFER_CLIENT_USER_AGENT);
+        } else {
+            client._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(kmsConfig.getUserAgent() + " " + Constants.TRANSFER_CLIENT_USER_AGENT);
+        }
         initKmsTransferHandler();
     }
 
