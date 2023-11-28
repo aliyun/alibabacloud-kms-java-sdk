@@ -19,12 +19,12 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibabacloud-kms-java-sdk</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibabacloud-dkms-gcs-sdk</artifactId>
-            <version>0.5.0</version>
+            <version>0.5.1</version>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>

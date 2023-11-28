@@ -1,6 +1,7 @@
 // This file is auto-generated, don't edit it. Thanks.
 package com.aliyun.kms.kms20160120;
 
+import com.aliyun.kms.kms20160120.utils.Constants;
 import com.aliyun.tea.TeaConverter;
 import com.aliyun.tea.TeaModel;
 import com.aliyun.tea.TeaPair;
@@ -8,15 +9,26 @@ import com.aliyun.tea.TeaPair;
 public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     public com.aliyun.kms20160120.Client _kmsClient;
+
     public Client(com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig, com.aliyun.teaopenapi.models.Config openApiConfig) throws Exception {
         super(kmsInstanceConfig);
+        if (kmsInstanceConfig.getUserAgent() == null || "".equals(kmsInstanceConfig.getUserAgent())) {
+            this._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(Constants.CLIENT_USER_AGENT);
+        } else {
+            this._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(kmsInstanceConfig.getUserAgent() + " " + Constants.CLIENT_USER_AGENT);
+        }
         this._kmsClient = new com.aliyun.kms20160120.Client(openApiConfig);
     }
 
     public Client(com.aliyun.dkms.gcs.openapi.models.Config config) throws Exception {
         super(config);
+        if (config.getUserAgent() == null || "".equals(config.getUserAgent())) {
+            this._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(Constants.CLIENT_USER_AGENT);
+        } else {
+            this._userAgent = com.aliyun.dkms.gcs.openapi.util.Client.getUserAgent(config.getUserAgent() + " " + Constants.CLIENT_USER_AGENT);
+        }
     }
-    
+
     public Client(com.aliyun.teaopenapi.models.Config openApiConfig) throws Exception {
         super(new com.aliyun.dkms.gcs.openapi.models.Config().setEndpoint("mock endpoint"));
         this._kmsClient = new com.aliyun.kms20160120.Client(openApiConfig);
@@ -44,6 +56,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用CancelKeyDeletion接口撤销密钥删除
+     *
      * @param request
      * @return CancelKeyDeletionResponse
      */
@@ -53,6 +66,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用CancelKeyDeletion接口撤销密钥删除
+     *
      * @param request
      * @param runtime
      * @return CancelKeyDeletionResponse
@@ -63,6 +77,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用CreateAlias接口为主密钥（CMK）创建一个别名
+     *
      * @param request
      * @return CreateAliasResponse
      */
@@ -72,6 +87,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用CreateAlias接口为主密钥（CMK）创建一个别名
+     *
      * @param request
      * @param runtime
      * @return CreateAliasResponse
@@ -82,6 +98,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用CreateKey接口创建一个主密钥
+     *
      * @param request
      * @return CreateKeyResponse
      */
@@ -91,6 +108,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用CreateKey接口创建一个主密钥
+     *
      * @param request
      * @param runtime
      * @return CreateKeyResponse
@@ -101,6 +119,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用CreateKeyVersion接口为用户主密钥（CMK）创建密钥版本
+     *
      * @param request
      * @return CreateKeyVersionResponse
      */
@@ -110,6 +129,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用CreateKeyVersion接口为用户主密钥（CMK）创建密钥版本
+     *
      * @param request
      * @param runtime
      * @return CreateKeyVersionResponse
@@ -120,6 +140,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 创建凭据并存入凭据的初始版本
+     *
      * @param request
      * @return CreateSecretResponse
      */
@@ -129,6 +150,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数创建凭据并存入凭据的初始版本
+     *
      * @param request
      * @param runtime
      * @return CreateSecretResponse
@@ -139,6 +161,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DeleteAlias接口删除别名
+     *
      * @param request
      * @return DeleteAliasResponse
      */
@@ -148,6 +171,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DeleteAlias接口删除别名
+     *
      * @param request
      * @param runtime
      * @return DeleteAliasResponse
@@ -158,6 +182,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DeleteKeyMaterial接口删除已导入的密钥材料
+     *
      * @param request
      * @return DeleteKeyMaterialResponse
      */
@@ -167,6 +192,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DeleteKeyMaterial接口删除已导入的密钥材料
+     *
      * @param request
      * @param runtime
      * @return DeleteKeyMaterialResponse
@@ -177,6 +203,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DeleteSecret接口删除凭据对象
+     *
      * @param request
      * @return DeleteSecretResponse
      */
@@ -186,6 +213,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DeleteSecret接口删除凭据对象
+     *
      * @param request
      * @param runtime
      * @return DeleteSecretResponse
@@ -196,6 +224,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DescribeKey接口查询用户主密钥（CMK）详情
+     *
      * @param request
      * @return DescribeKeyResponse
      */
@@ -205,6 +234,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DescribeKey接口查询用户主密钥（CMK）详情
+     *
      * @param request
      * @param runtime
      * @return DescribeKeyResponse
@@ -215,6 +245,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DescribeKeyVersion接口查询指定密钥版本信息
+     *
      * @param request
      * @return DescribeKeyVersionResponse
      */
@@ -224,6 +255,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DescribeKeyVersion接口查询指定密钥版本信息
+     *
      * @param request
      * @param runtime
      * @return DescribeKeyVersionResponse
@@ -234,6 +266,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DescribeSecret接口查询凭据的元数据信息
+     *
      * @param request
      * @return DescribeSecretResponse
      */
@@ -243,6 +276,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DescribeSecret接口查询凭据的元数据信息
+     *
      * @param request
      * @param runtime
      * @return DescribeSecretResponse
@@ -253,6 +287,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DisableKey接口禁用指定的主密钥（CMK）进行加解密
+     *
      * @param request
      * @return DisableKeyResponse
      */
@@ -262,6 +297,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DisableKey接口禁用指定的主密钥（CMK）进行加解密
+     *
      * @param request
      * @param runtime
      * @return DisableKeyResponse
@@ -272,6 +308,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用EnableKey接口启用指定的主密钥进行加解密
+     *
      * @param request
      * @return EnableKeyResponse
      */
@@ -281,6 +318,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用EnableKey接口启用指定的主密钥进行加解密
+     *
      * @param request
      * @param runtime
      * @return EnableKeyResponse
@@ -291,6 +329,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用GetParametersForImport接口获取导入主密钥材料的参数
+     *
      * @param request
      * @return GetParametersForImportResponse
      */
@@ -300,6 +339,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用GetParametersForImport接口获取导入主密钥材料的参数
+     *
      * @param request
      * @param runtime
      * @return GetParametersForImportResponse
@@ -310,6 +350,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用GetRandomPassword接口获得一个随机口令字符串
+     *
      * @param request
      * @return GetRandomPasswordResponse
      */
@@ -319,6 +360,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用GetRandomPassword接口获得一个随机口令字符串
+     *
      * @param request
      * @param runtime
      * @return GetRandomPasswordResponse
@@ -329,6 +371,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ImportKeyMaterial接口导入密钥材料
+     *
      * @param request
      * @return ImportKeyMaterialResponse
      */
@@ -338,6 +381,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ImportKeyMaterial接口导入密钥材料
+     *
      * @param request
      * @param runtime
      * @return ImportKeyMaterialResponse
@@ -348,6 +392,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ListAliases接口查询当前用户在当前地域的所有别名
+     *
      * @param request
      * @return ListAliasesResponse
      */
@@ -357,6 +402,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ListAliases接口查询当前用户在当前地域的所有别名
+     *
      * @param request
      * @param runtime
      * @return ListAliasesResponse
@@ -367,6 +413,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ListKeys查询调用者在调用地域的所有主密钥ID
+     *
      * @param request
      * @return ListKeysResponse
      */
@@ -376,6 +423,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ListKeys查询调用者在调用地域的所有主密钥ID
+     *
      * @param request
      * @param runtime
      * @return ListKeysResponse
@@ -386,6 +434,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ListKeyVersions接口列出主密钥的所有密钥版本
+     *
      * @param request
      * @return ListKeyVersionsResponse
      */
@@ -395,6 +444,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ListKeyVersions接口列出主密钥的所有密钥版本
+     *
      * @param request
      * @param runtime
      * @return ListKeyVersionsResponse
@@ -405,6 +455,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ListResourceTags获取用户主密钥的标签
+     *
      * @param request
      * @return ListResourceTagsResponse
      */
@@ -414,6 +465,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ListResourceTags获取用户主密钥的标签
+     *
      * @param request
      * @param runtime
      * @return ListResourceTagsResponse
@@ -424,6 +476,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ListSecrets接口查询当前用户在当前地域创建的所有凭据
+     *
      * @param request
      * @return ListSecretsResponse
      */
@@ -433,6 +486,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ListSecrets接口查询当前用户在当前地域创建的所有凭据
+     *
      * @param request
      * @param runtime
      * @return ListSecretsResponse
@@ -443,6 +497,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ListSecretVersionIds接口查询凭据的所有版本信息
+     *
      * @param request
      * @return ListSecretVersionIdsResponse
      */
@@ -452,6 +507,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ListSecretVersionIds接口查询凭据的所有版本信息
+     *
      * @param request
      * @param runtime
      * @return ListSecretVersionIdsResponse
@@ -462,6 +518,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用PutSecretValue接口为凭据存入一个新版本的凭据值
+     *
      * @param request
      * @return PutSecretValueResponse
      */
@@ -471,6 +528,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用PutSecretValue接口为凭据存入一个新版本的凭据值
+     *
      * @param request
      * @param runtime
      * @return PutSecretValueResponse
@@ -481,6 +539,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用RestoreSecret接口恢复被删除的凭据
+     *
      * @param request
      * @return RestoreSecretResponse
      */
@@ -490,6 +549,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用RestoreSecret接口恢复被删除的凭据
+     *
      * @param request
      * @param runtime
      * @return RestoreSecretResponse
@@ -500,6 +560,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用RotateSecret接口手动轮转凭据
+     *
      * @param request
      * @return RotateSecretResponse
      */
@@ -509,6 +570,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用RotateSecret接口手动轮转凭据
+     *
      * @param request
      * @param runtime
      * @return RotateSecretResponse
@@ -519,6 +581,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用ScheduleKeyDeletion接口申请删除一个指定的主密钥（CMK)
+     *
      * @param request
      * @return ScheduleKeyDeletionResponse
      */
@@ -528,6 +591,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用ScheduleKeyDeletion接口申请删除一个指定的主密钥（CMK)
+     *
      * @param request
      * @param runtime
      * @return ScheduleKeyDeletionResponse
@@ -538,6 +602,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用SetDeletionProtection接口为用户主密钥（CMK）开启或关闭删除保护
+     *
      * @param request
      * @return SetDeletionProtectionResponse
      */
@@ -547,6 +612,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用SetDeletionProtection接口为用户主密钥（CMK）开启或关闭删除保护
+     *
      * @param request
      * @param runtime
      * @return SetDeletionProtectionResponse
@@ -557,6 +623,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用TagResource接口为主密钥、凭据或证书绑定标签
+     *
      * @param request
      * @return TagResourceResponse
      */
@@ -566,6 +633,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用TagResource接口为主密钥、凭据或证书绑定标签
+     *
      * @param request
      * @param runtime
      * @return TagResourceResponse
@@ -576,6 +644,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用UntagResource接口为主密钥、凭据或证书解绑标签
+     *
      * @param request
      * @return UntagResourceResponse
      */
@@ -585,6 +654,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用UntagResource接口为主密钥、凭据或证书解绑标签
+     *
      * @param request
      * @param runtime
      * @return UntagResourceResponse
@@ -595,6 +665,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用UpdateAlias接口更新已存在的别名所代表的主密钥（CMK）ID
+     *
      * @param request
      * @return UpdateAliasResponse
      */
@@ -604,6 +675,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用UpdateAlias接口更新已存在的别名所代表的主密钥（CMK）ID
+     *
      * @param request
      * @param runtime
      * @return UpdateAliasResponse
@@ -614,6 +686,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用UpdateKeyDescription接口更新主密钥的描述信息
+     *
      * @param request
      * @return UpdateKeyDescriptionResponse
      */
@@ -623,6 +696,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用UpdateKeyDescription接口更新主密钥的描述信息
+     *
      * @param request
      * @param runtime
      * @return UpdateKeyDescriptionResponse
@@ -633,6 +707,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用UpdateRotationPolicy接口更新密钥轮转策略
+     *
      * @param request
      * @return UpdateRotationPolicyResponse
      */
@@ -642,6 +717,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用UpdateRotationPolicy接口更新密钥轮转策略
+     *
      * @param request
      * @param runtime
      * @return UpdateRotationPolicyResponse
@@ -652,6 +728,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用UpdateSecret接口更新凭据的元数据
+     *
      * @param request
      * @return UpdateSecretResponse
      */
@@ -661,6 +738,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用UpdateSecret接口更新凭据的元数据
+     *
      * @param request
      * @param runtime
      * @return UpdateSecretResponse
@@ -671,6 +749,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用UpdateSecretRotationPolicy接口更新凭据轮转策略
+     *
      * @param request
      * @return UpdateSecretRotationPolicyResponse
      */
@@ -680,6 +759,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用UpdateSecretRotationPolicy接口更新凭据轮转策略
+     *
      * @param request
      * @param runtime
      * @return UpdateSecretRotationPolicyResponse
@@ -690,6 +770,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用UpdateSecretVersionStage接口更新凭据的版本状态
+     *
      * @param request
      * @return UpdateSecretVersionStageResponse
      */
@@ -699,6 +780,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用UpdateSecretVersionStage接口更新凭据的版本状态
+     *
      * @param request
      * @param runtime
      * @return UpdateSecretVersionStageResponse
@@ -709,6 +791,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用OpenKmsService接口为当前阿里云账号开通密钥管理服务
+     *
      * @return OpenKmsServiceResponse
      */
     public com.aliyun.kms20160120.models.OpenKmsServiceResponse openKmsService() throws Exception {
@@ -717,6 +800,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用OpenKmsService接口为当前阿里云账号开通密钥管理服务
+     *
      * @param runtime
      * @return OpenKmsServiceResponse
      */
@@ -726,6 +810,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DescribeRegions接口查询当前账号的可用地域列表
+     *
      * @return DescribeRegionsResponse
      */
     public com.aliyun.kms20160120.models.DescribeRegionsResponse describeRegions() throws Exception {
@@ -734,6 +819,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DescribeRegions接口查询当前账号的可用地域列表
+     *
      * @param runtime
      * @return DescribeRegionsResponse
      */
@@ -743,6 +829,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用DescribeAccountKmsStatus接口查询当前阿里云账号的密钥管理服务状态
+     *
      * @return DescribeAccountKmsStatusResponse
      */
     public com.aliyun.kms20160120.models.DescribeAccountKmsStatusResponse describeAccountKmsStatus() throws Exception {
@@ -751,6 +838,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用DescribeAccountKmsStatus接口查询当前阿里云账号的密钥管理服务状态
+     *
      * @param runtime
      * @return DescribeAccountKmsStatusResponse
      */
@@ -760,6 +848,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用GetSecretValue接口获取共享网关凭据值
+     *
      * @param request
      * @return GetSecretValueResponse
      */
@@ -769,6 +858,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用GetSecretValue接口获取共享网关凭据值
+     *
      * @param request
      * @param runtime
      * @return GetSecretValueResponse
@@ -779,6 +869,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 调用GetPublicKey接口获取共享网关非对称密钥的公钥
+     *
      * @param request
      * @return GetPublicKeyResponse
      */
@@ -788,6 +879,7 @@ public class Client extends com.aliyun.dkms.gcs.sdk.Client {
 
     /**
      * 带运行参数调用GetPublicKey接口获取共享网关非对称密钥的公钥
+     *
      * @param request
      * @param runtime
      * @return GetPublicKeyResponse
