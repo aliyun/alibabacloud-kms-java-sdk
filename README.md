@@ -40,7 +40,7 @@ The recommended way to use the Alibaba Cloud KMS SDK for Java in your project is
 <dependency>
     <groupId>com.aliyun</groupId>
     <artifactId>alibabacloud-kms-java-sdk</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
 </dependency>
 ```
 
@@ -64,9 +64,9 @@ Introduction to KMS Client
 Sample code
 ----------
 ### 1. Scenarios where key operations are performed only through VPC gateways.
-#### Refer to the following sample code to call the KMS Encrypt API. For more API examples, see [operation samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/operation)
+#### Refer to the following sample code to call the KMS AdvanceEncrypt API. For more API examples, see [operation samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/operation)
 ```Java
-public class Encrypt {
+public class AdvanceEncrypt {
 
     public static com.aliyun.dkms.gcs.openapi.models.Config createKmsInstanceConfig(String clientKeyFile, String password, String endpoint, String caFilePath) throws Exception {
         com.aliyun.dkms.gcs.openapi.models.Config config = new com.aliyun.dkms.gcs.openapi.models.Config();
@@ -81,24 +81,20 @@ public class Encrypt {
         return new com.aliyun.kms.kms20160120.Client(kmsInstanceConfig);
     }
     
-    public static com.aliyun.dkms.gcs.sdk.models.EncryptResponse encrypt(com.aliyun.kms.kms20160120.Client client, String keyId, byte[] plaintext, String algorithm, byte[] aad) throws Exception {
-        com.aliyun.dkms.gcs.sdk.models.EncryptRequest request = new com.aliyun.dkms.gcs.sdk.models.EncryptRequest()
+    public static com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptResponse advanceEncrypt(com.aliyun.kms.kms20160120.Client client, String keyId, byte[] plaintext) throws Exception {
+        com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptRequest request = new com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptRequest()
                 .setKeyId(keyId)
-                .setPlaintext(plaintext)
-                .setAad(aad)
-                .setAlgorithm(algorithm);
-        return client.encrypt(request);
+                .setPlaintext(plaintext);
+        return client.advanceEncrypt(request);
     }
 
     public static void main(String[] args_) throws Exception {
-        com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig = Encrypt.createKmsInstanceConfig(com.aliyun.darabonba.env.EnvClient.getEnv("your client key file path env"), com.aliyun.darabonba.env.EnvClient.getEnv("your client key password env"), "your kms instance endpoint env", "your ca file path");
-        com.aliyun.kms.kms20160120.Client client = Encrypt.createClient(kmsInstanceConfig);
-
-        byte[] aad = com.aliyun.teautil.Common.toBytes("your aad");
+        com.aliyun.dkms.gcs.openapi.models.Config kmsInstanceConfig = AdvanceEncrypt.createKmsInstanceConfig(com.aliyun.darabonba.env.EnvClient.getEnv("your client key file path env"), com.aliyun.darabonba.env.EnvClient.getEnv("your client key password env"), "your kms instance endpoint env", "your ca file path");
+        com.aliyun.kms.kms20160120.Client client = AdvanceEncrypt.createClient(kmsInstanceConfig);
+        
         String keyId = "your keyId";
         byte[] plaintext = com.aliyun.teautil.Common.toBytes("your plaintext");
-        String algorithm = "your algorithm";
-        com.aliyun.dkms.gcs.sdk.models.EncryptResponse response = Encrypt.encrypt(client, keyId, plaintext, algorithm, aad);
+        com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptResponse response = AdvanceEncrypt.advanceEncrypt(client, keyId, plaintext);
         com.aliyun.teaconsole.Client.log(com.aliyun.teautil.Common.toJSONString(response));
     }
 }
@@ -153,7 +149,7 @@ public class CreateKey {
 }
 ```
 ### 3. You must not only perform key operations through a VPC gateway, but also manage KMS resources through a public gateway.
-#### Refer to the following sample code to call the KMS CreateKey API and the Encrypt API. For more API examples, see [operation samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/operation) and [manage samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/manage)
+#### Refer to the following sample code to call the KMS CreateKey API and AdvanceEncrypt API. For more API examples, see [operation samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/operation) and [manage samples](./examples/src/main/java/com/aliyun/kms/kms20160120/samples/manage)
 ```Java
 public class Sample {
 
@@ -191,13 +187,11 @@ public class Sample {
         return client.createKey(request);
     }
 
-    public static com.aliyun.dkms.gcs.sdk.models.EncryptResponse encrypt(com.aliyun.kms.kms20160120.Client client, String keyId, byte[] plaintext, String algorithm, byte[] aad) throws Exception {
-        com.aliyun.dkms.gcs.sdk.models.EncryptRequest request = new com.aliyun.dkms.gcs.sdk.models.EncryptRequest()
+    public static com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptResponse advanceEncrypt(com.aliyun.kms.kms20160120.Client client, String keyId, byte[] plaintext) throws Exception {
+        com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptRequest request = new com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptRequest()
                 .setKeyId(keyId)
-                .setPlaintext(plaintext)
-                .setAad(aad)
-                .setAlgorithm(algorithm);
-        return client.encrypt(request);
+                .setPlaintext(plaintext);
+        return client.advanceEncrypt(request);
     }
 
     public static void main(String[] args_) throws Exception {
@@ -216,12 +210,10 @@ public class Sample {
         String keySpec = "your keySpec";
         com.aliyun.kms20160120.models.CreateKeyResponse createKeyResponse = Sample.createKey(client, enableAutomaticRotation, rotationInterval, keyUsage, origin, description, dKMSInstanceId, protectionLevel, keySpec);
         com.aliyun.teaconsole.Client.log(com.aliyun.teautil.Common.toJSONString(createKeyResponse));
-
-        byte[] aad = com.aliyun.teautil.Common.toBytes("your aad");
+        
         String keyId = "your keyId";
         byte[] plaintext = com.aliyun.teautil.Common.toBytes("your plaintext");
-        String algorithm = "your algorithm";
-        com.aliyun.dkms.gcs.sdk.models.EncryptResponse encryptResponse = Sample.encrypt(client, keyId, plaintext, algorithm, aad);
+        com.aliyun.dkms.gcs.sdk.models.AdvanceEncryptResponse encryptResponse = Sample.advanceEncrypt(client, keyId, plaintext);
         com.aliyun.teaconsole.Client.log(com.aliyun.teautil.Common.toJSONString(encryptResponse));
     }
 }

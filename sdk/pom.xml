@@ -7,7 +7,7 @@
     <groupId>com.aliyun</groupId>
     <artifactId>alibabacloud-kms-java-sdk</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
     <name>Alibaba Cloud KMS SDK for Java</name>
 
     <properties>
