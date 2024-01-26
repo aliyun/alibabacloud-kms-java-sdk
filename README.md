@@ -40,7 +40,7 @@ The recommended way to use the Alibaba Cloud KMS SDK for Java in your project is
 <dependency>
     <groupId>com.aliyun</groupId>
     <artifactId>alibabacloud-kms-java-sdk</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
 </dependency>
 ```
 
