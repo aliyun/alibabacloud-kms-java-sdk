@@ -6,7 +6,7 @@
 
     <groupId>com.aliyun</groupId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <artifactId>kms-java-sdk-benchmarks</artifactId>
     <name>Alibaba Cloud KMS SDK for Java Benchmarks</name>
 
@@ -19,17 +19,12 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibabacloud-kms-java-sdk</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.4</version>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibabacloud-dkms-gcs-sdk</artifactId>
-            <version>0.5.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>tea</artifactId>
-            <version>1.2.6</version>
+            <version>0.5.2</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

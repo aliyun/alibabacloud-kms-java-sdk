@@ -40,6 +40,9 @@ public class AdvanceDecryptTransferHandler implements KmsTransferHandler<Advance
         }
         AdvanceDecryptRequest decryptDKmsRequest = new AdvanceDecryptRequest();
         byte[] ciphertextBlob = base64.decode(query.get("CiphertextBlob"));
+        if (ciphertextBlob.length <= Constants.EKT_ID_LENGTH + Constants.GCM_IV_LENGTH) {
+            throw newInvalidParameterClientException("CiphertextBlob");
+        }
         byte[] ivBytes = Arrays.copyOfRange(ciphertextBlob, Constants.EKT_ID_LENGTH, Constants.EKT_ID_LENGTH + Constants.GCM_IV_LENGTH);
         byte cipherVerAndPaddingMode = Constants.CIPHER_VER << 4 | 0;
         decryptDKmsRequest.setIv(ivBytes);
