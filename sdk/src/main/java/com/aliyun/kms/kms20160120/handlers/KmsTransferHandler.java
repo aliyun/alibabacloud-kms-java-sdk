@@ -89,6 +89,21 @@ public interface KmsTransferHandler<DKMSRequest extends TeaModel, DKMSResponse e
         return e;
     }
 
+    default TeaException newInvalidParameterClientException(String paramName) {
+        TeaException e = new TeaException(new HashMap<String, Object>() {
+            {
+                put("code", KmsErrorCodeTransferUtils.INVALID_PARAMETER_ERROR_CODE);
+                put("message", String.format("The parameter  %s  is invalid.", paramName));
+            }
+        });
+        Map<String, Object> data = e.getData();
+        if (data != null && data.size() > 0) {
+            data.put("Code", e.getCode());
+            data.put("Message", e.getMessage());
+        }
+        return e;
+    }
+
     default com.aliyun.dkms.gcs.openapi.util.models.RuntimeOptions transferRuntimeOptions(KmsRuntimeOptions runtimeOptions) {
         com.aliyun.dkms.gcs.openapi.util.models.RuntimeOptions dkmsRuntimeOptions = new com.aliyun.dkms.gcs.openapi.util.models.RuntimeOptions();
         if (runtimeOptions != null) {

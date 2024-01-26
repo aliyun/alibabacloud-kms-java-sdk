@@ -38,6 +38,9 @@ public class DecryptTransferHandler implements KmsTransferHandler<DecryptRequest
         }
         DecryptRequest decryptDKmsRequest = new DecryptRequest();
         byte[] ciphertextBlob = base64.decode(query.get("CiphertextBlob"));
+        if (ciphertextBlob.length <= Constants.EKT_ID_LENGTH + Constants.GCM_IV_LENGTH) {
+            throw newInvalidParameterClientException("CiphertextBlob");
+        }
         byte[] ektIdBytes = Arrays.copyOfRange(ciphertextBlob, 0, Constants.EKT_ID_LENGTH);
         byte[] ivBytes = Arrays.copyOfRange(ciphertextBlob, Constants.EKT_ID_LENGTH, Constants.EKT_ID_LENGTH + Constants.GCM_IV_LENGTH);
         byte[] ciphertextBytes = Arrays.copyOfRange(ciphertextBlob, Constants.EKT_ID_LENGTH + Constants.GCM_IV_LENGTH, ciphertextBlob.length);
