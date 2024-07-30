@@ -7,7 +7,7 @@
     <groupId>com.aliyun</groupId>
     <artifactId>alibabacloud-kms-java-sdk</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
     <name>Alibaba Cloud KMS SDK for Java</name>
 
     <properties>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibabacloud-dkms-gcs-sdk</artifactId>
-            <version>0.5.2</version>
+            <version>0.5.3</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
