@@ -23,7 +23,7 @@ public class Benchmark {
             String keyId = argsList.getOrDefault("key_id", "");
             int dataSize = Integer.parseInt(argsList.getOrDefault("data_size", "32"));
             String secretName = argsList.getOrDefault("secret_name", "");
-            String caPath = argsList.getOrDefault("ca_path", "");
+            String caPath = argsList.getOrDefault("ca_path", null);
             String algorithm = argsList.getOrDefault("algorithm", "");
             String keyFormat = argsList.getOrDefault("key_format", "");
             String keyPairSpec = argsList.getOrDefault("key_pair_spec", "");

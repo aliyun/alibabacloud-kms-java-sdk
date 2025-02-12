@@ -243,7 +243,7 @@ public class Config {
         }
         MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
         this.digest = sha256.digest(this.plainText.getBytes(StandardCharsets.UTF_8));
-        if (!this.caFilePath.isEmpty()) {
+        if (this.caFilePath != null && !this.caFilePath.isEmpty()) {
             this.ca = new String(Files.readAllBytes(Paths.get(this.caFilePath)));
         }
         this.aad = "this is encryption context".getBytes(StandardCharsets.UTF_8);
